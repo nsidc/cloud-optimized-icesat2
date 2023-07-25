@@ -13,7 +13,7 @@ This repository contains use case gathering, benchmarking, and prototyping work 
 * This repository is not actively supported by NSIDC but we welcome issue submissions and
   pull requests in order to foster community contribution.
 
-See the [LICENSE](LICENSE) for details on permissions and warranties. Please contact
+See the [LICENSE](https://github.com/nsidc/cloud-optimized-icesat2/blob/main/LICENSE_NASA) for details on permissions and warranties. Please contact
 nsidc@nsidc.org for more information.
 
 
