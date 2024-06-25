@@ -1,0 +1,39 @@
+,tool,dataset,cloud-aware,format,file,time,shape,bytes_requested,mean
+0,h5py,1GB,yes,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01.h5,25.65900492668152,"(9720204,)",99747204.0,386.06738
+1,h5py,1GB,yes,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,20.408759355545044,"(9720204,)",83886080.0,386.06738
+2,h5py,1GB,yes,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,18.999509572982788,"(9720204,)",83886080.0,386.06738
+3,h5py,1GB,yes,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-4mb.h5,11.790946960449219,"(9720204,)",67108864.0,386.06738
+4,h5py,1GB,yes,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-8mb.h5,15.822997331619263,"(9720204,)",67108864.0,386.06738
+5,h5py,7GB,yes,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,48.68436598777771,"(46484912,)",289026695.0,1035.1631
+6,h5py,7GB,yes,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,70.48264646530151,"(46484912,)",310378496.0,1035.1631
+7,h5py,7GB,yes,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,65.42151403427124,"(46484912,)",276824064.0,1035.1631
+8,h5py,7GB,yes,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,56.31552195549011,"(46484912,)",209715200.0,1035.1631
+9,h5py,7GB,yes,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,45.85606813430786,"(46484912,)",192937984.0,1035.1631
+10,xarray,1GB,yes,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01.h5,358.7792627811432,"(9720204,)",3115126892.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+11,xarray,1GB,yes,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,25.655497312545776,"(9720204,)",117440512.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+12,xarray,1GB,yes,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,21.614663124084473,"(9720204,)",117440512.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+13,xarray,1GB,yes,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-4mb.h5,24.130909204483032,"(9720204,)",100663296.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+14,xarray,1GB,yes,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-8mb.h5,26.89226269721985,"(9720204,)",109051904.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+15,xarray,7GB,yes,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,434.80006074905396,"(46484912,)",3334781579.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+16,xarray,7GB,yes,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,88.67918252944946,"(46484912,)",377487360.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+17,xarray,7GB,yes,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,81.73798608779907,"(46484912,)",335544320.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+18,xarray,7GB,yes,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,68.79028868675232,"(46484912,)",243269632.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+19,xarray,7GB,yes,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,56.77860450744629,"(46484912,)",234881024.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+20,kerchunk,1GB,no,original-kerchunk,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01.json,5.335654020309448,"(9720204,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+21,kerchunk,1GB,no,rechunked-8mb-kerchunk,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-8mb.json,4.396910905838013,"(9720204,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+22,kerchunk,7GB,no,original-kerchunk,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.json,27.210114240646362,"(46484912,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+23,kerchunk,7GB,no,rechunked-8mb-kerchunk,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.json,17.314841270446777,"(46484912,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
