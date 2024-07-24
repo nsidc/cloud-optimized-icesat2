@@ -1,0 +1,12 @@
+project: 
+  type: manuscript
+  render:
+    - paper.qmd
+  output-dir: docs
+manuscript:
+  article: paper.qmd
+format:
+  agu-html:
+    keep-tex: false
+  agu-pdf:
+    keep-tex: true    
