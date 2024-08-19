@@ -1,5 +1,5 @@
 ---
-title: "Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission"
+title: "Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission"
 format:
     agu-pdf:
         keep-tex: true
@@ -39,6 +39,36 @@ author:
         postal-code: 80309
     orcid: 0000-0002-3039-0260
     url: "https://github.com/asteiker"
+  - name: "Aleksandar Jelenak"
+    affiliations:
+      - name: The HDF Group
+        city: Champaign
+        region: IL
+        country: USA
+        postal-code: 61820
+    orcid: 0009-0001-2102-0559
+    url: "https://github.com/ajelenak"
+  - name: "Lisa Kaser"
+    affiliations:
+      - name: National Snow and Ice Data Center, University of Colorado, Boulder.
+        department: CIRES
+        address: CIRES, 449 UCB
+        city: Boulder
+        region: CO
+        country: USA
+        postal-code: 80309
+    url: "https://nsidc.org/about/about-nsidc/what-we-do/our-people/lisa_kaser"
+  - name: "Jeffrey E. Lee"
+    affiliations:
+      - name:  NASA / KBR
+        department: NASA Goddard Space Flight Center 
+        address: 8800 Greenbelt Rd
+        city: Greenbelt
+        region: MD
+        country: USA
+        postal-code: 20771
+    url: "https://science.gsfc.nasa.gov/sci/bio/jeffrey.e.lee"
+
 
 abstract: |
   The Hierarchical Data Format (HDF) is a common archival format for n-dimensional scientific data; it has been utilized to store valuable information from astrophysics to earth sciences and everything in between. As flexible and powerful as HDF can be, it comes with big tradeoffs when it’s accessed from remote storage systems, mainly because the file format and the client I/O libraries were designed for local and supercomputing workflows. As scientific data and workflows migrate to the cloud , efficient access to data stored in HDF format is a key factor that will accelerate or slow down “science in the cloud” across all disciplines.
@@ -56,25 +86,116 @@ keep-tex: true
 date: last-modified
 ---
 
-## Section Heading
+## Problem
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit facilisis velit sit amet malesuada. Phasellus ornare nibh augue, maximus sodales ex tristique vitae. Vivamus non sollicitudin orci, aliquam placerat metus. Maecenas volutpat orci felis, vel finibus urna consectetur sed. Integer in dui ac dui mollis imperdiet. Quisque sed dapibus nibh. Aenean non luctus leo. Phasellus luctus mauris id aliquet dictum. Aliquam fermentum semper massa, vel dignissim nibh dictum et. See @Hubbard2021.
+Scientific data from NASA and other agencies are increasingly being distributed from the commercial cloud. Cloud storage enables large-scale workflows and should reduce local storage costs. It also allows the use of scalable on-demand cloud computing resources by individual scientists and the broader scientific community. However, the majority of this scientific data is stored in a format that was not designed for the cloud: The Hierarchical Data format or HDF.
 
-Phasellus interdum tincidunt ex, a euismod massa pulvinar at. Ut fringilla ut nisi nec volutpat. Morbi imperdiet congue tincidunt. Vivamus eget rutrum purus. Etiam et pretium justo. Donec et egestas sem. Donec molestie ex sit amet viverra egestas. Nullam justo nulla, fringilla at iaculis in, posuere non mauris. Ut eget imperdiet elit.
+The most recent version of the Hierarchical Data Format is HDF5, a common archival format for n-dimensional scientific data; it has been utilized to store valuable information from astrophysics to earth sciences and everything in between. As flexible and powerful as HDF5 can be, it comes with big tradeoffs when it’s accessed from remote storage systems. 
 
-In luctus mauris vitae imperdiet luctus. Morbi volutpat ligula ut tortor fermentum, eu ornare felis luctus. Donec semper diam vitae mattis posuere. Suspendisse facilisis purus nisi, sit amet egestas ex tempor ut. Cras tortor nulla, euismod at fermentum vel, dictum vel justo. Aenean commodo interdum diam nec placerat. Nunc vestibulum felis at est tincidunt, at euismod dui vestibulum. Nulla venenatis tortor at auctor iaculis. Donec consectetur neque ut sagittis ornare. Nullam pharetra felis tempor suscipit efficitur. Curabitur nibh ex, euismod at congue hendrerit, egestas id mi. Duis porttitor neque in commodo elementum. Fusce vitae fermentum nisi, euismod viverra augue. Curabitur at mi pretium, accumsan purus nec, tempus turpis.
+HDF5 is a complex file format; we can think of it as a file system using a tree-like structure with multiple data types and native data structures. Because of this complexity, the most reliable way of accessing data stored in this format is using the HDF5 C API. Regardless of access pattern, nearly all tools ultimately rely on the HDF5-C library and this brings a couple issues that affect the efficiency of accessing this format over the network:
 
-Donec non semper dui, quis aliquet est. Quisque quis sapien at massa ultricies egestas. Duis consequat ultricies erat, a pulvinar nisl vestibulum id. Sed tristique turpis ligula, et tempor lectus iaculis at. Vivamus commodo sapien ac turpis vestibulum dapibus. Morbi tristique arcu metus, et laoreet nisi varius nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce sit amet nisl at mauris suscipit aliquet. Nulla vitae dignissim urna. Suspendisse sit amet arcu vitae magna blandit mattis. Vivamus convallis efficitur pulvinar. Sed cursus elit nulla. Sed porta, arcu a euismod pretium, odio dui lacinia lacus, ac vulputate nulla augue eget ex. Nullam consequat ligula sit amet mattis aliquam. Nulla risus urna, ultrices vel ullamcorper id, ornare viverra nunc.
+---
 
-Nunc in lobortis lacus. Duis maximus urna leo, varius sodales arcu interdum nec. Pellentesque imperdiet dolor in leo eleifend dapibus. Ut dapibus, lectus non viverra gravida, ipsum ex faucibus tellus, quis iaculis risus tellus eget augue. Nullam a viverra est. Cras velit nisi, interdum in lacus at, vehicula mattis elit. Curabitur eu viverra purus. Proin pellentesque, metus vitae congue convallis, lorem metus feugiat mi, sit amet auctor purus ligula bibendum ante. Nam id justo scelerisque, rhoncus lectus in, fermentum libero. Donec tincidunt egestas ex ac eleifend. Cras faucibus ipsum a nunc faucibus fermentum. Integer et maximus lacus. Nam dictum nibh id viverra convallis.
+#### **Metadata fragmentation**
 
-## Acknowledgments
+By default, file-level metadata associated with a dataset is stored in chunks of 4kb. This produces a lot of fragmentation across the file especially for data with many variables and nested groups.
 
-Phasellus interdum tincidunt ex, a euismod massa pulvinar at. Ut fringilla ut nisi nec volutpat. Morbi imperdiet congue tincidunt. Vivamus eget rutrum purus. Etiam et pretium justo. Donec et egestas sem. Donec molestie ex sit amet viverra egestas. Nullam justo nulla, fringilla at iaculis in, posuere non mauris. Ut eget imperdiet elit.
+#### **Global API Lock**
 
-## Open research
+Because of the historical complexity of operations with the HDF5 format, there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read is sequential and latency in the cloud is exponentially bigger than local access.
 
-Phasellus interdum tincidunt ex, a euismod massa pulvinar at. Ut fringilla ut nisi nec volutpat. Morbi imperdiet congue tincidunt. Vivamus eget rutrum purus. Etiam et pretium justo. Donec et egestas sem. Donec molestie ex sit amet viverra egestas. Nullam justo nulla, fringilla at iaculis in, posuere non mauris. Ut eget imperdiet elit.
+---
+
+::: {#fig-1 fig-env="figure*"}
+
+![](figures/figure-1.png)
+
+shows how reads (Rn) are done in order to access file metadata, In the first read, R0, the HDF5 library verifies the file signature from the superblock,  subsequent reads, R1, R2,...Rn, read file metadata, 4kb at the time.
+
+:::
+
+#### Background and data selection
+
+As a result of community feedback and “hack weeks” organized by NSIDC and UW eScience Institute in 2023, NSIDC started the Cloud Optimized Format Investigation (COFI) project to improve access to HDF5 from the ICESat-2 mission. A spaceborne lidar that retrieves surface topography of the Earth’s ice sheets, land and [oceans @NEUMANN2019111325].  Because of its complexity, large size and importance for cryospheric studies we targeted the ATL03 dataset. ATL03 core data are geolocated photon heights from the ICESat-2 ATLAS instrument. Each file contains 1003 geophysical variables in 6 data groups. Although our research was focused on this dataset, most of our findings are applicable to any dataset stored in HDF5 and NetCDF4.
+
+## Methodology 
+
+We tested access times to original and cloud-optimized small (1 GB), medium (2 GB) and large (7 GB) HDF5 ATL03 files [list files tested] stored in AWS S3 buckets in region us-west-2, the region hosting NASA’s Earthdata Cloud archives.  Files were accessed using Python tools commonly used by Earth scientists: h5py and Xarray.  h5py is a Python wrapper around the HDF5 C API.  xarray^[`h5py` is a dependency of Xarray]  is a widely used Python package for working with n-dimensional data.  We also tested access times using h5coro, a python package optimized for reading HDF5 files from S3 buckets and kerchunk, a tool that creates an efficient lookup table for file chunks to allow performant partial reads of files.
+
+HDF5 ATL03 files were originally cloud optimized by  “repacking” them, using a relatively new feature in the HDF5 C API called “paged aggregation”. Page aggregation does 2 things: it collects file-level metadata from datasets and stores it on dedicated metadata blocks in the file; and it forces the library to write data using fixed-size blocks. Aggregation allows client libraries to read  file metadata with only a few requests and uses the page size used in the aggregation as the minimal request size, overriding the 1 request per chunk behavior.
+
+::: {#fig-2 fig-env="figure*"}
+
+![](figures/figure-2.png)
+
+shows how file-level metadata and data gets internally packed once we use paged aggregation on a file.
+
+:::
+
+
+## Results
+
+
+::: {#fig-3 fig-env="figure*"}
+
+![](figures/figure-3.png)
+
+Benchmarks show that cloud optimizing ATL03 files improved access times at least an order of magnitude when used with aligned I/O patterns, this is telling the library about the cloud optimization and page size.
+
+:::
+
+## Recommendations
+
+We have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development.
+
+### Recommended cloud optimizations
+
+Based on our testing we recommend the following cloud optimizations for creating HDF5 files for the ATL03 product:
+Create HDF5 files using paged aggregation by setting HDF5 library parameters:
+
+1. File page strategy: H5F_FSPACE_STRATEGY_PAGE
+2. File page size: 8000000
+  If repacking an existing file, h5repack contains the code to alter tese variables inside the file 
+  ```bash
+   h5repack -S PAGE -G 8000000 input.h5 output.h5
+  ```
+3. Avoid using unlimited dimensions when creating variables because the HDF5 API cannot support it inside bffered pages and representation of these variables is not supported by Kerchunk.
+
+#### Reasoning
+
+Based on the variable size of ATL03 it becomes really difficult to allocate a fixed metadata page, big files contain north of 30MB of metadata, but the median sized file is below 8MB. If we had
+adopted user block we would have caused an increase in the file size and storage cost of approximate 30% (reference to our tests). Another consequence of using a dedicated fixed page for file-level metadata is
+that metadata overflow will generate the same impact in access times, the library will fetch the metadata in one go but the rest will be using the predefined block size of 4kb. 
+
+Paged aggregation is thus the simplest way of cloud optimizing an HDF5 file as the metadata will keep filling dedicated pages until all the file-level metadata is stored at the front of the file.
+Chunk sizes cannot be larger than the page size and when chunk sizes are smaller we need to take into account how these chunks will fit on a page, in an ideal scenario all the space
+will be filled but that is not the case and we will end up with unused space [See @fig-2].
+
+### Recommended access patterns
+
+Placeholder
+
+### Recommended tooling development
+
+Placeholder
+
+### Mission implementation
+
+ATL03 is a complex science data product containing both segmented (20 meters along-track) and large, variable-rate photon datasets. ATL03 is created using pipeline-style processing where the science data and NetCDF-style metadata are written by independent software packages.  The following steps were employed to create cloud-optimized Release 007 ATL03 products, while minimizing increases in file size:
+ 
+1. Set the "file space strategy" to H5F_FSPACE_STRATEGY_PAGE and enabled "free space tracking" within the HDF5 file creation property list.
+2. Set the "file space page size" to 8MiB.
+3. Changed all "COMPACT" dataset storage types to "CONTIGUOUS".
+4. Increased the "chunk size" of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no "chunk sizes" exceeded the 8MiB "file space page size".
+5. Introduced a new production step that executes the "h5repack" utility (with no options) to create a "defragmented" final product.
+
+## Discussion
+
+1. Chunking shapes and sizes
+2. Paged aggregation vs User block
+3. Side effects on different access patterns, e.g. Kerchunk
+
+<!-- ## Acknowledgments -->
 
 ## References {.unnumbered}
 
