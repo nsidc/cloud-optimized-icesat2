@@ -2,17 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Luis A. Lopez">
 <meta name="author" content="Andrew P. Barrett">
 <meta name="author" content="Amy Steiker">
-<meta name="dcterms.date" content="2024-07-24">
+<meta name="author" content="Aleksandar Jelenak">
+<meta name="author" content="Lisa Kaser">
+<meta name="author" content="Jeffrey E. Lee">
+<meta name="dcterms.date" content="2024-08-19">
 <meta name="keywords" content="cloud-native, cloud, HDF5, NASA, ICESat-2">
 
-<title>Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</title>
+<title>Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,6 +27,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -58,9 +95,12 @@ div.csl-indent {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 
 
-<meta name="citation_title" content="Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission">
+<meta name="citation_title" content="Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission">
 <meta name="citation_abstract" content="The Hierarchical Data Format (HDF) is a common archival format for n-dimensional scientific data; it has been utilized to store valuable information from astrophysics to earth sciences and everything in between. As flexible and powerful as HDF can be, it comes with big tradeoffs when it’s accessed from remote storage systems, mainly because the file format and the client I/O libraries were designed for local and supercomputing workflows. As scientific data and workflows migrate to the cloud , efficient access to data stored in HDF format is a key factor that will accelerate or slow down “science in the cloud” across all disciplines.
 We present an implementation of recently available features in the HDF5 stack that results in performant access to HDF from remote cloud storage. This performance is on par with modern cloud-native formats like Zarr but with the advantage of not having to reformat data or generate metadata sidecar files (DMR++, Kerchunk). Our benchmarks also show potential cost-savings for  data producers if their data are processed using cloud-optimized strategies.
 ">
@@ -68,13 +108,22 @@ We present an implementation of recently available features in the HDF5 stack th
 <meta name="citation_author" content="Luis A. Lopez">
 <meta name="citation_author" content="Andrew P. Barrett">
 <meta name="citation_author" content="Amy Steiker">
-<meta name="citation_publication_date" content="2024-07-24">
-<meta name="citation_cover_date" content="2024-07-24">
+<meta name="citation_author" content="Aleksandar Jelenak">
+<meta name="citation_author" content="Lisa Kaser">
+<meta name="citation_author" content="Jeffrey E. Lee">
+<meta name="citation_publication_date" content="2024-08-19">
+<meta name="citation_cover_date" content="2024-08-19">
 <meta name="citation_year" content="2024">
-<meta name="citation_online_date" content="2024-07-24">
+<meta name="citation_online_date" content="2024-08-19">
 <meta name="citation_language" content="en">
 <meta name="citation_journal_title" content="Geophysical Research Letters">
-<meta name="citation_reference" content="citation_title=Borehole-based characterization of deep mixed-mode crevasses at a greenlandic outlet glacier;,citation_author=Bryn Hubbard;,citation_author=Poul Christoffersen;,citation_author=Samuel H. Doyle;,citation_author=Thomas R. Chudley;,citation_author=Charlotte M. Schoonman;,citation_author=Robert Law;,citation_author=Marion Bougamont;,citation_publication_date=2021-06;,citation_cover_date=2021-06;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1029/2020av000291;,citation_issue=2;,citation_doi=10.1029/2020av000291;,citation_volume=2;,citation_journal_title=AGU Advances;,citation_publisher=American Geophysical Union (AGU);">
+<meta name="citation_reference" content="citation_title=The ice, cloud, and land elevation satellite – 2 mission: A global geolocated photon product derived from the advanced topographic laser altimeter system;,citation_abstract=The Ice, Cloud, and land Elevation Satellite – 2 (ICESat-2) observatory was launched on 15 September 2018 to measure ice sheet and glacier elevation change, sea ice freeboard, and enable the determination of the heights of Earth’s forests. ICESat-2’s laser altimeter, the Advanced Topographic Laser Altimeter System (ATLAS) uses green (532 nm) laser light and single-photon sensitive detection to measure time of flight and subsequently surface height along each of its six beams. In this paper, we describe the major components of ATLAS, including the transmitter, the receiver and the components of the timing system. We present the major components of the ICESat-2 observatory, including the Global Positioning System, star trackers and inertial measurement unit. The ICESat-2 Level 1B data product (ATL02) provides the precise photon round-trip time of flight, among other data. The ICESat-2 Level 2A data product (ATL03) combines the photon times of flight with the observatory position and attitude to determine the geodetic location (i.e. the latitude, longitude and height) of the ground bounce point of photons detected by ATLAS. The ATL03 data product is used by higher-level (Level 3A) surface-specific data products to determine glacier and ice sheet height, sea ice freeboard, vegetation canopy height, ocean surface topography, and inland water body height.;,citation_author=Thomas A. Neumann;,citation_author=Anthony J. Martino;,citation_author=Thorsten Markus;,citation_author=Sungkoo Bae;,citation_author=Megan R. Bock;,citation_author=Anita C. Brenner;,citation_author=Kelly M. Brunt;,citation_author=John Cavanaugh;,citation_author=Stanley T. Fernandes;,citation_author=David W. Hancock;,citation_author=Kaitlin Harbeck;,citation_author=Jeffrey Lee;,citation_author=Nathan T. Kurtz;,citation_author=Philip J. Luers;,citation_author=Scott B. Luthcke;,citation_author=Lori Magruder;,citation_author=Teresa A. Pennington;,citation_author=Luis Ramos-Izquierdo;,citation_author=Timothy Rebold;,citation_author=Jonah Skoog;,citation_author=Taylor C. Thomas;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S003442571930344X;,citation_doi=https://doi.org/10.1016/j.rse.2019.111325;,citation_issn=0034-4257;,citation_volume=233;,citation_journal_title=Remote Sensing of Environment;">
+<meta name="citation_reference" content="citation_title=HDF in the cloud challenges and solutions for scientific data;,citation_author=Matthew Rocklin;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_fulltext_html_url=https://matthewrocklin.com/blog/work/2018/02/06/hdf-in-the-cloud;">
+<meta name="citation_reference" content="citation_title=Task 51 - cloud-optimized format study;,citation_author=Chris Durbin;,citation_author=Patrick Quinn;,citation_author=Dana Shuma;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://ntrs.nasa.gov/citations/20200001178;,citation_technical_report_institution=NASA ESDIS;">
+<meta name="citation_reference" content="citation_title=Cloud-optimized HDF5 files: 2023 ESIP summer meeting;,citation_author=Aleksandar Jelenak;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://ntrs.nasa.gov/citations/20230012271;">
+<meta name="citation_reference" content="citation_title=Toward cloud optimized HDF5 files;,citation_author=Aleksandar Jelenak;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://ntrs.nasa.gov/citations/20220019334;">
+<meta name="citation_reference" content="citation_title=Strategies and software to optimize HDF5/netcdf-4 files for the cloud;,citation_author=Aleksandar Jelenak;,citation_author=Dana Robinson;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://www.hdfgroup.org/wp-content/uploads/2024/01/Strategies-and-Software-to-Optimize-HDF5netCDF-4-Files-for-the-Cloud-AGU_2023_IN31B-0653.pdf;">
+<meta name="citation_reference" content="citation_title=HDF5 at the speed of zarr;,citation_author=Luis Lopez;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://discourse.pangeo.io/t/pangeo-showcase-hdf5-at-the-speed-of-zarr/4084;">
 </head>
 
 <body>
@@ -82,7 +131,7 @@ We present an implementation of recently available features in the HDF5 stack th
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</h1>
+      <h1 class="title">Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</h1>
           </div>
 
     
@@ -90,7 +139,7 @@ We present an implementation of recently available features in the HDF5 stack th
       <div class="quarto-title-meta-column-start">
             <div class="quarto-title-meta-author">
           <div class="quarto-title-meta-heading">Authors</div>
-          <div class="quarto-title-meta-heading">Affiliation</div>
+          <div class="quarto-title-meta-heading">Affiliations</div>
           
                 <div class="quarto-title-meta-contents">
             <p class="author"><a href="https://github.com/betolink">Luis A. Lopez</a> <a href="mailto:luis.lopezespinosa@colorado.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0003-4896-3263" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
@@ -116,6 +165,30 @@ We present an implementation of recently available features in the HDF5 stack th
                         National Snow and Ice Data Center, University of Colorado, Boulder.
                       </p>
                   </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author"><a href="https://github.com/ajelenak">Aleksandar Jelenak</a> <a href="https://orcid.org/0009-0001-2102-0559" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        The HDF Group
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author"><a href="https://nsidc.org/about/about-nsidc/what-we-do/our-people/lisa_kaser">Lisa Kaser</a> </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        National Snow and Ice Data Center, University of Colorado, Boulder.
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author"><a href="https://science.gsfc.nasa.gov/sci/bio/jeffrey.e.lee">Jeffrey E. Lee</a> </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        NASA / KBR
+                      </p>
+                  </div>
                     </div>
         
         <div class="quarto-title-meta">
@@ -124,7 +197,7 @@ We present an implementation of recently available features in the HDF5 stack th
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">July 24, 2024</p>
+              <p class="date">August 19, 2024</p>
             </div>
           </div>
           
@@ -157,9 +230,17 @@ We present an implementation of recently available features in the HDF5 stack th
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#section-heading" id="toc-section-heading" class="nav-link active" data-scroll-target="#section-heading"><span class="header-section-number">1</span> Section Heading</a></li>
-  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments"><span class="header-section-number">2</span> Acknowledgments</a></li>
-  <li><a href="#open-research" id="toc-open-research" class="nav-link" data-scroll-target="#open-research"><span class="header-section-number">3</span> Open research</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem"><span class="header-section-number">1</span> Problem</a></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology"><span class="header-section-number">2</span> Methodology</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3</span> Results</a></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations"><span class="header-section-number">4</span> Recommendations</a>
+  <ul class="collapse">
+  <li><a href="#recommended-cloud-optimizations" id="toc-recommended-cloud-optimizations" class="nav-link" data-scroll-target="#recommended-cloud-optimizations"><span class="header-section-number">4.1</span> Recommended cloud optimizations</a></li>
+  <li><a href="#recommended-access-patterns" id="toc-recommended-access-patterns" class="nav-link" data-scroll-target="#recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended access patterns</a></li>
+  <li><a href="#recommended-tooling-development" id="toc-recommended-tooling-development" class="nav-link" data-scroll-target="#recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended tooling development</a></li>
+  <li><a href="#mission-implementation" id="toc-mission-implementation" class="nav-link" data-scroll-target="#mission-implementation"><span class="header-section-number">4.4</span> Mission implementation</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">5</span> Discussion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -173,35 +254,134 @@ We present an implementation of recently available features in the HDF5 stack th
   
 
 
-<section id="section-heading" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="section-heading"><span class="header-section-number">1</span> Section Heading</h2>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit facilisis velit sit amet malesuada. Phasellus ornare nibh augue, maximus sodales ex tristique vitae. Vivamus non sollicitudin orci, aliquam placerat metus. Maecenas volutpat orci felis, vel finibus urna consectetur sed. Integer in dui ac dui mollis imperdiet. Quisque sed dapibus nibh. Aenean non luctus leo. Phasellus luctus mauris id aliquet dictum. Aliquam fermentum semper massa, vel dignissim nibh dictum et. See <span class="citation" data-cites="Hubbard2021">Hubbard et al. (<a href="#ref-Hubbard2021" role="doc-biblioref">2021</a>)</span>.</p>
-<p>Phasellus interdum tincidunt ex, a euismod massa pulvinar at. Ut fringilla ut nisi nec volutpat. Morbi imperdiet congue tincidunt. Vivamus eget rutrum purus. Etiam et pretium justo. Donec et egestas sem. Donec molestie ex sit amet viverra egestas. Nullam justo nulla, fringilla at iaculis in, posuere non mauris. Ut eget imperdiet elit.</p>
-<p>In luctus mauris vitae imperdiet luctus. Morbi volutpat ligula ut tortor fermentum, eu ornare felis luctus. Donec semper diam vitae mattis posuere. Suspendisse facilisis purus nisi, sit amet egestas ex tempor ut. Cras tortor nulla, euismod at fermentum vel, dictum vel justo. Aenean commodo interdum diam nec placerat. Nunc vestibulum felis at est tincidunt, at euismod dui vestibulum. Nulla venenatis tortor at auctor iaculis. Donec consectetur neque ut sagittis ornare. Nullam pharetra felis tempor suscipit efficitur. Curabitur nibh ex, euismod at congue hendrerit, egestas id mi. Duis porttitor neque in commodo elementum. Fusce vitae fermentum nisi, euismod viverra augue. Curabitur at mi pretium, accumsan purus nec, tempus turpis.</p>
-<p>Donec non semper dui, quis aliquet est. Quisque quis sapien at massa ultricies egestas. Duis consequat ultricies erat, a pulvinar nisl vestibulum id. Sed tristique turpis ligula, et tempor lectus iaculis at. Vivamus commodo sapien ac turpis vestibulum dapibus. Morbi tristique arcu metus, et laoreet nisi varius nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce sit amet nisl at mauris suscipit aliquet. Nulla vitae dignissim urna. Suspendisse sit amet arcu vitae magna blandit mattis. Vivamus convallis efficitur pulvinar. Sed cursus elit nulla. Sed porta, arcu a euismod pretium, odio dui lacinia lacus, ac vulputate nulla augue eget ex. Nullam consequat ligula sit amet mattis aliquam. Nulla risus urna, ultrices vel ullamcorper id, ornare viverra nunc.</p>
-<p>Nunc in lobortis lacus. Duis maximus urna leo, varius sodales arcu interdum nec. Pellentesque imperdiet dolor in leo eleifend dapibus. Ut dapibus, lectus non viverra gravida, ipsum ex faucibus tellus, quis iaculis risus tellus eget augue. Nullam a viverra est. Cras velit nisi, interdum in lacus at, vehicula mattis elit. Curabitur eu viverra purus. Proin pellentesque, metus vitae congue convallis, lorem metus feugiat mi, sit amet auctor purus ligula bibendum ante. Nam id justo scelerisque, rhoncus lectus in, fermentum libero. Donec tincidunt egestas ex ac eleifend. Cras faucibus ipsum a nunc faucibus fermentum. Integer et maximus lacus. Nam dictum nibh id viverra convallis.</p>
+<section id="problem" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="problem"><span class="header-section-number">1</span> Problem</h2>
+<p>Scientific data from NASA and other agencies are increasingly being distributed from the commercial cloud. Cloud storage enables large-scale workflows and should reduce local storage costs. It also allows the use of scalable on-demand cloud computing resources by individual scientists and the broader scientific community. However, the majority of this scientific data is stored in a format that was not designed for the cloud: The Hierarchical Data format or HDF.</p>
+<p>The most recent version of the Hierarchical Data Format is HDF5, a common archival format for n-dimensional scientific data; it has been utilized to store valuable information from astrophysics to earth sciences and everything in between. As flexible and powerful as HDF5 can be, it comes with big tradeoffs when it’s accessed from remote storage systems.</p>
+<p>HDF5 is a complex file format; we can think of it as a file system using a tree-like structure with multiple data types and native data structures. Because of this complexity, the most reliable way of accessing data stored in this format is using the HDF5 C API. Regardless of access pattern, nearly all tools ultimately rely on the HDF5-C library and this brings a couple issues that affect the efficiency of accessing this format over the network:</p>
+<hr>
+<section id="metadata-fragmentation" class="level4" data-number="1.0.1">
+<h4 data-number="1.0.1" class="anchored" data-anchor-id="metadata-fragmentation"><span class="header-section-number">1.0.1</span> <strong>Metadata fragmentation</strong></h4>
+<p>By default, file-level metadata associated with a dataset is stored in chunks of 4kb. This produces a lot of fragmentation across the file especially for data with many variables and nested groups.</p>
 </section>
-<section id="acknowledgments" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="acknowledgments"><span class="header-section-number">2</span> Acknowledgments</h2>
-<p>Phasellus interdum tincidunt ex, a euismod massa pulvinar at. Ut fringilla ut nisi nec volutpat. Morbi imperdiet congue tincidunt. Vivamus eget rutrum purus. Etiam et pretium justo. Donec et egestas sem. Donec molestie ex sit amet viverra egestas. Nullam justo nulla, fringilla at iaculis in, posuere non mauris. Ut eget imperdiet elit.</p>
+<section id="global-api-lock" class="level4" data-number="1.0.2">
+<h4 data-number="1.0.2" class="anchored" data-anchor-id="global-api-lock"><span class="header-section-number">1.0.2</span> <strong>Global API Lock</strong></h4>
+<p>Because of the historical complexity of operations with the HDF5 format, there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read is sequential and latency in the cloud is exponentially bigger than local access.</p>
+<hr>
+<div id="fig-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/figure-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: shows how reads (Rn) are done in order to access file metadata, In the first read, R0, the HDF5 library verifies the file signature from the superblock, subsequent reads, R1, R2,…Rn, read file metadata, 4kb at the time."><img src="figures/figure-1.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: shows how reads (Rn) are done in order to access file metadata, In the first read, R0, the HDF5 library verifies the file signature from the superblock, subsequent reads, R1, R2,…Rn, read file metadata, 4kb at the time.
+</figcaption>
+</figure>
+</div>
 </section>
-<section id="open-research" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="open-research"><span class="header-section-number">3</span> Open research</h2>
-<p>Phasellus interdum tincidunt ex, a euismod massa pulvinar at. Ut fringilla ut nisi nec volutpat. Morbi imperdiet congue tincidunt. Vivamus eget rutrum purus. Etiam et pretium justo. Donec et egestas sem. Donec molestie ex sit amet viverra egestas. Nullam justo nulla, fringilla at iaculis in, posuere non mauris. Ut eget imperdiet elit.</p>
+<section id="background-and-data-selection" class="level4" data-number="1.0.3">
+<h4 data-number="1.0.3" class="anchored" data-anchor-id="background-and-data-selection"><span class="header-section-number">1.0.3</span> Background and data selection</h4>
+<p>As a result of community feedback and “hack weeks” organized by NSIDC and UW eScience Institute in 2023, NSIDC started the Cloud Optimized Format Investigation (COFI) project to improve access to HDF5 from the ICESat-2 mission. A spaceborne lidar that retrieves surface topography of the Earth’s ice sheets, land and <span class="citation" data-cites="NEUMANN2019111325">(oceans <a href="#ref-NEUMANN2019111325" role="doc-biblioref">Neumann et al., 2019</a>)</span>. Because of its complexity, large size and importance for cryospheric studies we targeted the ATL03 dataset. ATL03 core data are geolocated photon heights from the ICESat-2 ATLAS instrument. Each file contains 1003 geophysical variables in 6 data groups. Although our research was focused on this dataset, most of our findings are applicable to any dataset stored in HDF5 and NetCDF4.</p>
+</section>
+</section>
+<section id="methodology" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="methodology"><span class="header-section-number">2</span> Methodology</h2>
+<p>We tested access times to original and cloud-optimized small (1 GB), medium (2 GB) and large (7 GB) HDF5 ATL03 files [list files tested] stored in AWS S3 buckets in region us-west-2, the region hosting NASA’s Earthdata Cloud archives. Files were accessed using Python tools commonly used by Earth scientists: h5py and Xarray. h5py is a Python wrapper around the HDF5 C API. xarray<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a widely used Python package for working with n-dimensional data. We also tested access times using h5coro, a python package optimized for reading HDF5 files from S3 buckets and kerchunk, a tool that creates an efficient lookup table for file chunks to allow performant partial reads of files.</p>
+<p>HDF5 ATL03 files were originally cloud optimized by “repacking” them, using a relatively new feature in the HDF5 C API called “paged aggregation”. Page aggregation does 2 things: it collects file-level metadata from datasets and stores it on dedicated metadata blocks in the file; and it forces the library to write data using fixed-size blocks. Aggregation allows client libraries to read file metadata with only a few requests and uses the page size used in the aggregation as the minimal request size, overriding the 1 request per chunk behavior.</p>
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/figure-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: shows how file-level metadata and data gets internally packed once we use paged aggregation on a file."><img src="figures/figure-2.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: shows how file-level metadata and data gets internally packed once we use paged aggregation on a file.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="results" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="results"><span class="header-section-number">3</span> Results</h2>
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/figure-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Benchmarks show that cloud optimizing ATL03 files improved access times at least an order of magnitude when used with aligned I/O patterns, this is telling the library about the cloud optimization and page size."><img src="figures/figure-3.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Benchmarks show that cloud optimizing ATL03 files improved access times at least an order of magnitude when used with aligned I/O patterns, this is telling the library about the cloud optimization and page size.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="recommendations" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="recommendations"><span class="header-section-number">4</span> Recommendations</h2>
+<p>We have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development.</p>
+<section id="recommended-cloud-optimizations" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="recommended-cloud-optimizations"><span class="header-section-number">4.1</span> Recommended cloud optimizations</h3>
+<p>Based on our testing we recommend the following cloud optimizations for creating HDF5 files for the ATL03 product: Create HDF5 files using paged aggregation by setting HDF5 library parameters:</p>
+<ol type="1">
+<li>File page strategy: H5F_FSPACE_STRATEGY_PAGE</li>
+<li>File page size: 8000000 If repacking an existing file, h5repack contains the code to alter tese variables inside the file</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a> <span class="ex">h5repack</span> <span class="at">-S</span> PAGE <span class="at">-G</span> 8000000 input.h5 output.h5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li>Avoid using unlimited dimensions when creating variables because the HDF5 API cannot support it inside bffered pages and representation of these variables is not supported by Kerchunk.</li>
+</ol>
+<section id="reasoning" class="level4" data-number="4.1.1">
+<h4 data-number="4.1.1" class="anchored" data-anchor-id="reasoning"><span class="header-section-number">4.1.1</span> Reasoning</h4>
+<p>Based on the variable size of ATL03 it becomes really difficult to allocate a fixed metadata page, big files contain north of 30MB of metadata, but the median sized file is below 8MB. If we had adopted user block we would have caused an increase in the file size and storage cost of approximate 30% (reference to our tests). Another consequence of using a dedicated fixed page for file-level metadata is that metadata overflow will generate the same impact in access times, the library will fetch the metadata in one go but the rest will be using the predefined block size of 4kb.</p>
+<p>Paged aggregation is thus the simplest way of cloud optimizing an HDF5 file as the metadata will keep filling dedicated pages until all the file-level metadata is stored at the front of the file. Chunk sizes cannot be larger than the page size and when chunk sizes are smaller we need to take into account how these chunks will fit on a page, in an ideal scenario all the space will be filled but that is not the case and we will end up with unused space <a href="#fig-2" class="quarto-xref">See&nbsp;2</a>.</p>
+</section>
+</section>
+<section id="recommended-access-patterns" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended access patterns</h3>
+<p>Placeholder</p>
+</section>
+<section id="recommended-tooling-development" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended tooling development</h3>
+<p>Placeholder</p>
+</section>
+<section id="mission-implementation" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="mission-implementation"><span class="header-section-number">4.4</span> Mission implementation</h3>
+<p>ATL03 is a complex science data product containing both segmented (20 meters along-track) and large, variable-rate photon datasets. ATL03 is created using pipeline-style processing where the science data and NetCDF-style metadata are written by independent software packages. The following steps were employed to create cloud-optimized Release 007 ATL03 products, while minimizing increases in file size:</p>
+<ol type="1">
+<li>Set the “file space strategy” to H5F_FSPACE_STRATEGY_PAGE and enabled “free space tracking” within the HDF5 file creation property list.</li>
+<li>Set the “file space page size” to 8MiB.</li>
+<li>Changed all “COMPACT” dataset storage types to “CONTIGUOUS”.</li>
+<li>Increased the “chunk size” of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no “chunk sizes” exceeded the 8MiB “file space page size”.</li>
+<li>Introduced a new production step that executes the “h5repack” utility (with no options) to create a “defragmented” final product.</li>
+</ol>
+</section>
+</section>
+<section id="discussion" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="discussion"><span class="header-section-number">5</span> Discussion</h2>
+<ol type="1">
+<li>Chunking shapes and sizes</li>
+<li>Paged aggregation vs User block</li>
+<li>Side effects on different access patterns, e.g.&nbsp;Kerchunk</li>
+</ol>
+<!-- ## Acknowledgments -->
 </section>
 <section id="references" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-Hubbard2021" class="csl-entry" role="listitem">
-Hubbard, B., Christoffersen, P., Doyle, S. H., Chudley, T. R., Schoonman, C. M., Law, R., &amp; Bougamont, M. (2021). Borehole-based characterization of deep mixed-mode crevasses at a greenlandic outlet glacier. <em><span>AGU</span> Advances</em>, <em>2</em>(2). <a href="https://doi.org/10.1029/2020av000291">https://doi.org/10.1029/2020av000291</a>
+<div id="ref-NEUMANN2019111325" class="csl-entry" role="listitem">
+Neumann, T. A., Martino, A. J., Markus, T., Bae, S., Bock, M. R., Brenner, A. C., et al. (2019). The ice, cloud, and land elevation satellite – 2 mission: A global geolocated photon product derived from the advanced topographic laser altimeter system. <em>Remote Sensing of Environment</em>, <em>233</em>, 111325. https://doi.org/<a href="https://doi.org/10.1016/j.rse.2019.111325">https://doi.org/10.1016/j.rse.2019.111325</a>
 </div>
 </div>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{a._lopez2024,
-  author = {A. Lopez, Luis and P. Barrett, Andrew and Steiker, Amy},
-  title = {Cloud-Optimized {HDF5} for {NASA’s} {ICESat-2} {Mission}},
-  date = {2024-07-24},
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><code>h5py</code> is a dependency of Xarray<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{a._lopez2024,
+  author = {A. Lopez, Luis and P. Barrett, Andrew and Steiker, Amy and
+    Jelenak, Aleksandar and Kaser, Lisa and E. Lee, Jeffrey},
+  title = {Evaluating {Cloud-Optimized} {HDF5} for {NASA’s} {ICESat-2}
+    {Mission}},
+  date = {2024-08-19},
   langid = {en},
   abstract = {The Hierarchical Data Format (HDF) is a common archival
     format for n-dimensional scientific data; it has been utilized to
@@ -222,8 +402,9 @@ Hubbard, B., Christoffersen, P., Doyle, S. H., Chudley, T. R., Schoonman, C. M.,
     processed using cloud-optimized strategies.}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-a._lopez2024" class="csl-entry quarto-appendix-citeas" role="listitem">
-A. Lopez, L., P. Barrett, A., &amp; Steiker, A. (2024, July 24).
-Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission.
+A. Lopez, L., P. Barrett, A., Steiker, A., Jelenak, A., Kaser, L., &amp;
+E. Lee, J. (2024, August 19). Evaluating Cloud-Optimized HDF5 for NASA’s
+ICESat-2 Mission.
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -647,6 +828,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":false,"descPosition":"bottom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
