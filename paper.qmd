@@ -98,11 +98,13 @@ HDF5 is a complex file format; we can think of it as a file system using a tree-
 
 #### **Metadata fragmentation**
 
-By default, file-level metadata associated with a dataset is stored in chunks of 4kb. This produces a lot of fragmentation across the file especially for data with many variables and nested groups.
+When working with large datasets, especially those that include numerous variables and nested groups, the storage of file-level metadata can become a challenge. By default, metadata associated with each dataset is stored in chunks of 4 kilobytes (KB). This chunking mechanism was originally intended to optimize storage efficiency and access speed on disks with hardware resources available more than 20 years ago. In datasets with many variables and/or complex hierarchical structures, these 4KB chunks can lead to significant fragmentation.
+
+Fragmentation occurs when this metadata is spread out across multiple non-contiguous chunks within the file. This results in inefficiencies when accessing or modifying data because compatible libraries need to read from multiple, scattered locations in the file. Over time, as the dataset grows and evolves, this fragmentation can compound, leading to degraded performance and increased storage overhead. In particular, operations that involve reading or writing metadata, such as opening a file, checking attributes, or modifying variables, can become slower and more resource-intensive.
 
 #### **Global API Lock**
 
-Because of the historical complexity of operations with the HDF5 format, there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read is sequential and latency in the cloud is exponentially bigger than local access.
+Because of the historical complexity of operations with the HDF5 format[@The_HDF_Group_Hierarchical_Data_Format], there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read is sequential and latency in the cloud is exponentially bigger than local access [@Mozilla-latency-2024] [@scott-2020].
 
 ---
 
@@ -114,15 +116,15 @@ shows how reads (Rn) are done in order to access file metadata, In the first rea
 
 :::
 
-#### Background and data selection
+#### **Background and data selection**
 
-As a result of community feedback and “hack weeks” organized by NSIDC and UW eScience Institute in 2023, NSIDC started the Cloud Optimized Format Investigation (COFI) project to improve access to HDF5 from the ICESat-2 mission. A spaceborne lidar that retrieves surface topography of the Earth’s ice sheets, land and [oceans @NEUMANN2019111325].  Because of its complexity, large size and importance for cryospheric studies we targeted the ATL03 dataset. ATL03 core data are geolocated photon heights from the ICESat-2 ATLAS instrument. Each file contains 1003 geophysical variables in 6 data groups. Although our research was focused on this dataset, most of our findings are applicable to any dataset stored in HDF5 and NetCDF4.
+As a result of community feedback and “hack weeks” organized by NSIDC and UW eScience Institute in 2023[@h5cloud2023], NSIDC started the Cloud Optimized Format Investigation (COFI) project to improve access to HDF5 from the ICESat-2 mission. A spaceborne lidar that retrieves surface topography of the Earth’s ice sheets, land and oceans [@NEUMANN2019111325].  Because of its complexity, large size and importance for cryospheric studies we targeted the ATL03 dataset. ATL03 core data are geolocated photon heights from the ICESat-2 ATLAS instrument. Each file contains 1003 geophysical variables in 6 data groups. Although our research was focused on this dataset, most of our findings are applicable to any dataset stored in HDF5 and NetCDF4.
 
 ## Methodology 
 
-We tested access times to original and cloud-optimized small (1 GB), medium (2 GB) and large (7 GB) HDF5 ATL03 files [list files tested] stored in AWS S3 buckets in region us-west-2, the region hosting NASA’s Earthdata Cloud archives.  Files were accessed using Python tools commonly used by Earth scientists: h5py and Xarray.  h5py is a Python wrapper around the HDF5 C API.  xarray^[`h5py` is a dependency of Xarray]  is a widely used Python package for working with n-dimensional data.  We also tested access times using h5coro, a python package optimized for reading HDF5 files from S3 buckets and kerchunk, a tool that creates an efficient lookup table for file chunks to allow performant partial reads of files.
+We tested access times to original and different configurations of cloud-optimized HDF5 ATL03 files [list files tested] stored in AWS S3 buckets in region us-west-2, the region hosting NASA’s Earthdata Cloud archives.  Files were accessed using Python tools commonly used by Earth scientists: h5py and Xarray[@Hoyer2017-su].  h5py is a Python wrapper around the HDF5 C API.  xarray^[`h5py` is a dependency of Xarray]  is a widely used Python package for working with n-dimensional data.  We also tested access times using h5coro, a python package optimized for reading HDF5 files from S3 buckets and kerchunk, a tool that creates an efficient lookup table for file chunks to allow performant partial reads of files.
 
-HDF5 ATL03 files were originally cloud optimized by  “repacking” them, using a relatively new feature in the HDF5 C API called “paged aggregation”. Page aggregation does 2 things: it collects file-level metadata from datasets and stores it on dedicated metadata blocks in the file; and it forces the library to write data using fixed-size blocks. Aggregation allows client libraries to read  file metadata with only a few requests and uses the page size used in the aggregation as the minimal request size, overriding the 1 request per chunk behavior.
+The test files were originally cloud optimized by  “repacking” them, using a relatively new feature in the HDF5 C API called “paged aggregation”. Page aggregation does 2 things: it collects file-level metadata from datasets and stores it on dedicated metadata blocks in the file; and it forces the library to write both data and metadata using these fixed-size pages. Aggregation allows client libraries to read  file metadata with only a few requests and uses the page size used in the aggregation as the minimal request size, overriding the 1 request per chunk behavior.
 
 ::: {#fig-2 fig-env="figure*"}
 
@@ -132,13 +134,42 @@ shows how file-level metadata and data gets internally packed once we use paged 
 
 :::
 
-
-## Results
-
+As we can see in [@fig-2], when we cloud optimize a file using paged-aggregation there are some considerations and behavior that we had to take into account. The first thing to observe is that 
+page aggregation will --as we mentioned-- consolidate the file-evel metadata at the front of the file and will add information in the so-called superblock^[The HDF5 superblock is a crucial component of the HDF5 file format, acting as the starting point for accessing all data within the file. It stores important metadata such as the version of the file format, pointers to the root group, and addresses for locating different file components]
+The next thing to notice is that page size us uses across the board for metadata and data as of October 2024 and version 1.14 of the HDF5 library, page size cannot dynamically adjust to the total metadata size. 
 
 ::: {#fig-3 fig-env="figure*"}
 
 ![](figures/figure-3.png)
+
+shows how file-level metadata and data packing inside aggregated pages leave unused space that can potentially increase the file size in a considerable way.
+
+:::
+
+This one page size for all approach simplifies how the HDF5 API reads the file (if instructucted) but it also brings unused page space and chunk over-reads. In the case of the ICESat-2 dataset (ATL03) the data itself has been partitioned and each granule
+represents a segment in the satellite orbit and within the file the most relevant dataset is chunked using 10,000 items per chunk, with data being float-32 and using a fast compression value, the resulting chunk size is on average under 40KB, which is really small 
+for an HTTP request, especially when we have to read them sequentially. Because of these considerations, we opted for testing different page sizes, and increase chunk size. The following table describes the different configurations used in our tests.
+
+| prefix                 	| description                                        	| % file size increase 	| ~km per chunk 	| shape     	| page size 	| avg_chunk_size 	|
+|------------------------	|----------------------------------------------------	|----------------------	|---------------	|-----------	|-----------	|----------------	|
+| original               	| original file from ATL03 v6 (1gb and 7gb)          	| 0                    	| 1.5km         	| (10000,)  	| N/A       	| 35kb           	|
+| original-kerchunk      	| kerchunk sidecar of the original file              	| N/A                  	| 1.5km         	| (10000,)  	| N/A       	| 35kb           	|
+| page-only-4mb          	| paged-aggregated file with 4mb per page            	| ~1%                  	| 1.5km         	| (10000,)  	| 4MB       	| 35kb           	|
+| page-only-8mb          	| paged-aggregated file with 4mb per pag8            	| ~1%                  	| 1.5km         	| (10000,)  	| 8MB       	| 35kb           	|
+| rechunked-4mb          	| page-aggregated and bigger chunk sizes             	| ~1%                  	| 10km          	| (100000,) 	| 4MB       	| 400kb          	|
+| rechunked-8mb          	| page-aggregated and bigger chunk sizes             	| ~1%                  	| 10km          	| (100000,) 	| 8MB       	| 400kb          	|
+| rechunked-8mb-kerchunk 	| kerchunk sidecar of the last paged-aggregated file 	| N/A                  	| 10km          	| (10000,)  	| 8MB       	| 400kb          	|
+
+This table represents the different configurations we used for our tests in 2 file sizes. It's worth noticing that we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max)
+We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing is explained in the next section and the code
+to reproduce the results is in the attached notebooks.
+
+## Results
+
+
+::: {#fig-5 fig-env="figure*"}
+
+![](figures/figure-5.png)
 
 Benchmarks show that cloud optimizing ATL03 files improved access times at least an order of magnitude when used with aligned I/O patterns, this is telling the library about the cloud optimization and page size.
 
@@ -197,7 +228,7 @@ ATL03 is a complex science data product containing both segmented (20 meters alo
 
 <!-- ## Acknowledgments -->
 
-## References {.unnumbered}
+## References
 
 :::{#refs}
 

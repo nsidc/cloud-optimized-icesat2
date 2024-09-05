@@ -2,6 +2,9 @@ project:
   type: manuscript
   render:
     - paper.qmd
+    - notebooks/portable-full-comparison.ipynb
+    - notebooks/h5py.ipynb
+    - optimize.py
   output-dir: docs
 manuscript:
   article: paper.qmd

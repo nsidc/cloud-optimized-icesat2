@@ -1,3 +1,10 @@
 /.quarto/
 docs
+/notebooks/.ipynb_checkpoints/
+/notebooks/logs/
+/notebooks/*out.ipynb
+/notebooks/*.html
+/notebooks/*files/
+*.pyc
+__pycache__/
 
