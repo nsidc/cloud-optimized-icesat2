@@ -1,0 +1,11 @@
+,tool,dataset,cloud-aware,format,file,time,shape,bytes_requested,mean
+0,h5py-ros3,7GB,yes,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,609.4096472263336,"(46484912,)",,1035.1631
+1,h5py-ros3,7GB,yes,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,638.2754406929016,"(46484912,)",,1035.1631
+2,h5py-ros3,7GB,yes,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,653.3336625099182,"(46484912,)",,1035.1631
+3,h5py-ros3,7GB,yes,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,81.40565180778503,"(46484912,)",,1035.1631
+4,h5py-ros3,7GB,yes,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,76.86670875549316,"(46484912,)",,1035.1631
+5,h5py-fsspec,7GB,yes,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,618.8997149467468,"(46484912,)",0.0,1035.1631
+6,h5py-fsspec,7GB,yes,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,652.322696685791,"(46484912,)",0.0,1035.1631
+7,h5py-fsspec,7GB,yes,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,663.9397876262665,"(46484912,)",0.0,1035.1631
+8,h5py-fsspec,7GB,yes,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,70.95594787597656,"(46484912,)",0.0,1035.1631
+9,h5py-fsspec,7GB,yes,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,70.55050539970398,"(46484912,)",0.0,1035.1631

@@ -7,6 +7,8 @@
 
 This repository contains use case gathering, benchmarking, and prototyping work related to cloud-optimization of ICESat-2 data, with the overall goal of better enabling cloud access patterns for the ICESat-2 community. The audience of this repository includes ICESat-2 data providers and tool and service developers with experience and interest in developing solutions to improve the performance of ICESat-2 data in the cloud. 
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/nsidc/cloud-optimized-icesat2/main?labpath=notebooks%2F)
+
 
 ## Level of Support
 

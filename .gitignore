@@ -7,4 +7,5 @@ docs
 /notebooks/*files/
 *.pyc
 __pycache__/
-
+/site_libs/manuscript-notebook/
+.ipynb_checkpoints/

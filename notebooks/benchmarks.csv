@@ -1,0 +1,44 @@
+,tool,dataset,cloud-aware,format,file,time,shape,bytes_requested,mean
+0,h5py,7GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,25.779539585113525,"(46484912,)",289026695.0,1035.1631
+1,h5py,7GB,no,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,68.79631090164185,"(46484912,)",1036723526.0,1035.1631
+2,h5py,7GB,no,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,62.35629677772522,"(46484912,)",947145210.0,1035.1631
+3,h5py,7GB,no,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,27.586012840270996,"(46484912,)",286737116.0,1035.1631
+4,h5py,7GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,27.63655662536621,"(46484912,)",269539164.0,1035.1631
+5,kerchunk,1GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01.json,3.2203612327575684,"(9720204,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+6,kerchunk,1GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-8mb.json,4.984490156173706,"(9720204,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+7,kerchunk,7GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.json,14.271384954452515,"(46484912,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+8,kerchunk,7GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.json,8.327512979507446,"(46484912,)",,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+9,xarray,1GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01.h5,216.67426800727844,"(9720204,)",3125613354.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+10,xarray,1GB,no,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,224.73643493652344,"(9720204,)",3671050532.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+11,xarray,1GB,no,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,227.53268146514893,"(9720204,)",3671050532.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+12,xarray,1GB,no,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-4mb.h5,15.311556816101074,"(9720204,)",162702540.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+13,xarray,1GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-8mb.h5,13.107250928878784,"(9720204,)",136218854.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(386.06738, dtype=float32)"
+14,xarray,7GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,281.35928440093994,"(46484912,)",3350528419.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+15,xarray,7GB,no,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,435.6504566669464,"(46484912,)",5526810548.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+16,xarray,7GB,no,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,359.13231015205383,"(46484912,)",5337618697.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+17,xarray,7GB,no,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,156.73291158676147,"(46484912,)",2064608594.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+18,xarray,7GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,41.19576835632324,"(46484912,)",432504529.0,"<xarray.DataArray 'h_ph' ()> Size: 4B
+array(1035.1631, dtype=float32)"
+19,h5coro,1GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01.h5,10.852986097335815,"(9720204,)",,386.06738
+20,h5coro,1GB,no,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,8.163445472717285,"(9720204,)",,386.06738
+21,h5coro,1GB,no,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01-page-only-4mb.h5,6.128530740737915,"(9720204,)",,386.06738
+22,h5coro,1GB,no,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-4mb.h5,19.339251279830933,"(9720204,)",,386.06738
+23,h5coro,1GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20230618223036_13681901_006_01_rechunked-100k-page-8mb.h5,10.59383749961853,"(9720204,)",,386.06738
+24,h5coro,7GB,no,original,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02.h5,24.180256843566895,"(46484912,)",,1035.1631
+25,h5coro,7GB,no,page-only-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-4mb.h5,51.16006398200989,"(46484912,)",,1035.1631
+26,h5coro,7GB,no,page-only-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02-page-only-8mb.h5,23.30572533607483,"(46484912,)",,1035.1631
+27,h5coro,7GB,no,rechunked-4mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-4mb.h5,34.204936504364014,"(46484912,)",,1035.1631
+28,h5coro,7GB,no,rechunked-8mb,s3://its-live-data/test-space/cloud-experiments/h5cloud/atl03/ATL03_20181120182818_08110112_006_02_rechunked-100k-page-8mb.h5,33.829309940338135,"(46484912,)",,1035.1631
