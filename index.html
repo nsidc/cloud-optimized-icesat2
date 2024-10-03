@@ -12,7 +12,7 @@
 <meta name="author" content="Aleksandar Jelenak">
 <meta name="author" content="Lisa Kaser">
 <meta name="author" content="Jeffrey E. Lee">
-<meta name="dcterms.date" content="2024-09-05">
+<meta name="dcterms.date" content="2024-10-03">
 <meta name="keywords" content="cloud-native, cloud, HDF5, NASA, ICESat-2">
 
 <title>Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</title>
@@ -111,10 +111,10 @@ We present an implementation of recently available features in the HDF5 stack th
 <meta name="citation_author" content="Aleksandar Jelenak">
 <meta name="citation_author" content="Lisa Kaser">
 <meta name="citation_author" content="Jeffrey E. Lee">
-<meta name="citation_publication_date" content="2024-09-05">
-<meta name="citation_cover_date" content="2024-09-05">
+<meta name="citation_publication_date" content="2024-10-03">
+<meta name="citation_cover_date" content="2024-10-03">
 <meta name="citation_year" content="2024">
-<meta name="citation_online_date" content="2024-09-05">
+<meta name="citation_online_date" content="2024-10-03">
 <meta name="citation_language" content="en">
 <meta name="citation_journal_title" content="Geophysical Research Letters">
 <meta name="citation_reference" content="citation_title=The ice, cloud, and land elevation satellite – 2 mission: A global geolocated photon product derived from the advanced topographic laser altimeter system;,citation_abstract=The Ice, Cloud, and land Elevation Satellite – 2 (ICESat-2) observatory was launched on 15 September 2018 to measure ice sheet and glacier elevation change, sea ice freeboard, and enable the determination of the heights of Earth’s forests. ICESat-2’s laser altimeter, the Advanced Topographic Laser Altimeter System (ATLAS) uses green (532 nm) laser light and single-photon sensitive detection to measure time of flight and subsequently surface height along each of its six beams. In this paper, we describe the major components of ATLAS, including the transmitter, the receiver and the components of the timing system. We present the major components of the ICESat-2 observatory, including the Global Positioning System, star trackers and inertial measurement unit. The ICESat-2 Level 1B data product (ATL02) provides the precise photon round-trip time of flight, among other data. The ICESat-2 Level 2A data product (ATL03) combines the photon times of flight with the observatory position and attitude to determine the geodetic location (i.e. the latitude, longitude and height) of the ground bounce point of photons detected by ATLAS. The ATL03 data product is used by higher-level (Level 3A) surface-specific data products to determine glacier and ice sheet height, sea ice freeboard, vegetation canopy height, ocean surface topography, and inland water body height.;,citation_author=Thomas A. Neumann;,citation_author=Anthony J. Martino;,citation_author=Thorsten Markus;,citation_author=Sungkoo Bae;,citation_author=Megan R. Bock;,citation_author=Anita C. Brenner;,citation_author=Kelly M. Brunt;,citation_author=John Cavanaugh;,citation_author=Stanley T. Fernandes;,citation_author=David W. Hancock;,citation_author=Kaitlin Harbeck;,citation_author=Jeffrey Lee;,citation_author=Nathan T. Kurtz;,citation_author=Philip J. Luers;,citation_author=Scott B. Luthcke;,citation_author=Lori Magruder;,citation_author=Teresa A. Pennington;,citation_author=Luis Ramos-Izquierdo;,citation_author=Timothy Rebold;,citation_author=Jonah Skoog;,citation_author=Taylor C. Thomas;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S003442571930344X;,citation_doi=https://doi.org/10.1016/j.rse.2019.111325;,citation_issn=0034-4257;,citation_volume=233;,citation_journal_title=Remote Sensing of Environment;">
@@ -202,7 +202,7 @@ We present an implementation of recently available features in the HDF5 stack th
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">September 5, 2024</p>
+              <p class="date">October 3, 2024</p>
             </div>
           </div>
           
@@ -248,7 +248,7 @@ We present an implementation of recently available features in the HDF5 stack th
   <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">5</span> Discussion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">6</span> References</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="notebooks/portable-full-comparison-preview.html"><i class="bi bi-journal-code"></i>Testing access time for ICESat-2 ATL03 HDF5 files in the cloud.</a></li><li><a href="notebooks/h5py-preview.html"><i class="bi bi-journal-code"></i>Testing ROS3 and fsspec with h5py on cloud optimized HDF5 files</a></li></ul></div></nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="notebooks/h5py-atl03-preview.html"><i class="bi bi-journal-code"></i>Testing access times to cloud optimized HDF5 files with the fsspec and ROS3 drivers.</a></li></ul></div></nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -287,13 +287,13 @@ Figure&nbsp;1: shows how reads (Rn) are done in order to access file metadata, I
 </section>
 <section id="background-and-data-selection" class="level4" data-number="1.0.3">
 <h4 data-number="1.0.3" class="anchored" data-anchor-id="background-and-data-selection"><span class="header-section-number">1.0.3</span> <strong>Background and data selection</strong></h4>
-<p>As a result of community feedback and “hack weeks” organized by NSIDC and UW eScience Institute in 2023<span class="citation" data-cites="h5cloud2023">(<a href="#ref-h5cloud2023" role="doc-biblioref">ICESAT-2 HackWeek, 2023</a>)</span>, NSIDC started the Cloud Optimized Format Investigation (COFI) project to improve access to HDF5 from the ICESat-2 mission. A spaceborne lidar that retrieves surface topography of the Earth’s ice sheets, land and oceans <span class="citation" data-cites="NEUMANN2019111325">(<a href="#ref-NEUMANN2019111325" role="doc-biblioref">Neumann et al., 2019</a>)</span>. Because of its complexity, large size and importance for cryospheric studies we targeted the ATL03 dataset. ATL03 core data are geolocated photon heights from the ICESat-2 ATLAS instrument. Each file contains 1003 geophysical variables in 6 data groups. Although our research was focused on this dataset, most of our findings are applicable to any dataset stored in HDF5 and NetCDF4.</p>
+<p>As a result of community feedback and “hack weeks” organized by NSIDC and UW eScience Institute in 2023<span class="citation" data-cites="h5cloud2023">(<a href="#ref-h5cloud2023" role="doc-biblioref">ICESAT-2 HackWeek, 2023</a>)</span>, NSIDC started the Cloud Optimized Format Investigation (COFI) project to improve access to HDF5 from the ICESat-2 mission, a spaceborne lidar that retrieves surface topography of the Earth’s ice sheets, land and oceans <span class="citation" data-cites="NEUMANN2019111325">(<a href="#ref-NEUMANN2019111325" role="doc-biblioref">Neumann et al., 2019</a>)</span>. Because of its complexity, large size and importance for cryospheric studies we targeted the ATL03 data product. The most relevant variable in ATL03 are geolocated photon heights from the ICESat-2 ATLAS instrument. Each ATL03 file contains 1003 geophysical variables in 6 data groups. Although our research was focused on this dataset, most of our findings are applicable to any dataset stored in HDF5 and NetCDF4.</p>
 </section>
 </section>
 <section id="methodology" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="methodology"><span class="header-section-number">2</span> Methodology</h2>
-<p>We tested access times to original and different configurations of cloud-optimized HDF5 ATL03 files [list files tested] stored in AWS S3 buckets in region us-west-2, the region hosting NASA’s Earthdata Cloud archives. Files were accessed using Python tools commonly used by Earth scientists: h5py and Xarray<span class="citation" data-cites="Hoyer2017-su">(<a href="#ref-Hoyer2017-su" role="doc-biblioref">Hoyer &amp; Hamman, 2017</a>)</span>. h5py is a Python wrapper around the HDF5 C API. xarray<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a widely used Python package for working with n-dimensional data. We also tested access times using h5coro, a python package optimized for reading HDF5 files from S3 buckets and kerchunk, a tool that creates an efficient lookup table for file chunks to allow performant partial reads of files.</p>
-<p>The test files were originally cloud optimized by “repacking” them, using a relatively new feature in the HDF5 C API called “paged aggregation”. Page aggregation does 2 things: it collects file-level metadata from datasets and stores it on dedicated metadata blocks in the file; and it forces the library to write both data and metadata using these fixed-size pages. Aggregation allows client libraries to read file metadata with only a few requests and uses the page size used in the aggregation as the minimal request size, overriding the 1 request per chunk behavior.</p>
+<p>We tested access times to original and different configurations of cloud-optimized HDF5 <a href="https://its-live-data.s3.amazonaws.com/index.html#test-space/cloud-experiments/h5cloud/">ATL03 files</a> stored in AWS S3 buckets in region us-west-2, the region hosting NASA’s Earthdata Cloud archives. Files were accessed using Python tools commonly used by Earth scientists: h5py and Xarray<span class="citation" data-cites="Hoyer2017-su">(<a href="#ref-Hoyer2017-su" role="doc-biblioref">Hoyer &amp; Hamman, 2017</a>)</span>. h5py is a Python wrapper around the HDF5 C API. xarray<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a widely used Python package for working with n-dimensional data. We also tested access times using h5coro, a python package optimized for reading HDF5 files from S3 buckets and kerchunk, a tool that creates an efficient lookup table for file chunks to allow performant partial reads of files.</p>
+<p>The test files were originally cloud optimized by “repacking” them, using a relatively new feature in the HDF5 C API called “paged aggregation”. Page aggregation does 2 things: fisrt, it collects file-level metadata from datasets and stores it on dedicated metadata blocks at the front of the file; second, it forces the library to write both data and metadata using these fixed-size pages. Aggregation allows client libraries to read file metadata with only a few requests using the page size as a fixed request size, overriding the 1 request per chunk behavior.</p>
 <div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -397,7 +397,7 @@ Figure&nbsp;3: shows how file-level metadata and data packing inside aggregated 
 <td>kerchunk sidecar of the last paged-aggregated file</td>
 <td>N/A</td>
 <td>10km</td>
-<td>(10000,)</td>
+<td>(100000,)</td>
 <td>8MB</td>
 <td>400kb</td>
 </tr>
@@ -407,13 +407,23 @@ Figure&nbsp;3: shows how file-level metadata and data packing inside aggregated 
 </section>
 <section id="results" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="results"><span class="header-section-number">3</span> Results</h2>
+<div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="figures/figure-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: shows that using paged aggregation alone is not a complete solution. This behavior us caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize the requests. This means that if we cloud optimize alone and use the same code, in some cases we’ll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved. Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have anough memory and bandwith even bigger (Pangeo recommends up to 100MB chunks)[Add citation.]"><img src="figures/figure-4.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: shows that using paged aggregation alone is not a complete solution. This behavior us caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize the requests. This means that if we cloud optimize alone and use the same code, in some cases we’ll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved. Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have anough memory and bandwith even bigger (Pangeo recommends up to 100MB chunks)[Add citation.]
+</figcaption>
+</figure>
+</div>
 <div id="fig-5" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figures/figure-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Benchmarks show that cloud optimizing ATL03 files improved access times at least an order of magnitude when used with aligned I/O patterns, this is telling the library about the cloud optimization and page size."><img src="figures/figure-5.png" class="img-fluid figure-img"></a>
+<a href="figures/figure-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: shows that performance once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. These numbers are from in-region execution. Out of region is considerable slower for the non cloud optimized case."><img src="figures/figure-5.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Benchmarks show that cloud optimizing ATL03 files improved access times at least an order of magnitude when used with aligned I/O patterns, this is telling the library about the cloud optimization and page size.
+Figure&nbsp;5: shows that performance once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. These numbers are from in-region execution. Out of region is considerable slower for the non cloud optimized case.
 </figcaption>
 </figure>
 </div>
@@ -440,11 +450,11 @@ Figure&nbsp;4: Benchmarks show that cloud optimizing ATL03 files improved access
 </section>
 <section id="recommended-access-patterns" class="level3" data-number="4.2">
 <h3 data-number="4.2" class="anchored" data-anchor-id="recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended access patterns</h3>
-<p>Placeholder</p>
+<p>In progress</p>
 </section>
 <section id="recommended-tooling-development" class="level3" data-number="4.3">
 <h3 data-number="4.3" class="anchored" data-anchor-id="recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended tooling development</h3>
-<p>Placeholder</p>
+<p>In progress</p>
 </section>
 <section id="mission-implementation" class="level3" data-number="4.4">
 <h3 data-number="4.4" class="anchored" data-anchor-id="mission-implementation"><span class="header-section-number">4.4</span> Mission implementation</h3>
@@ -503,7 +513,7 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
     Jelenak, Aleksandar and Kaser, Lisa and E. Lee, Jeffrey},
   title = {Evaluating {Cloud-Optimized} {HDF5} for {NASA’s} {ICESat-2}
     {Mission}},
-  date = {2024-09-05},
+  date = {2024-10-03},
   langid = {en},
   abstract = {The Hierarchical Data Format (HDF) is a common archival
     format for n-dimensional scientific data; it has been utilized to
@@ -525,8 +535,8 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-a._lopez2024" class="csl-entry quarto-appendix-citeas" role="listitem">
 A. Lopez, L., P. Barrett, A., Steiker, A., Jelenak, A., Kaser, L., &amp;
-E. Lee, J. (2024, September 5). Evaluating Cloud-Optimized HDF5 for
-NASA’s ICESat-2 Mission.
+E. Lee, J. (2024, October 3). Evaluating Cloud-Optimized HDF5 for NASA’s
+ICESat-2 Mission.
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -950,7 +960,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","openEffect":"zoom","loop":false,"closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
