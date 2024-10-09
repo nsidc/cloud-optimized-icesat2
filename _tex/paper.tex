@@ -283,7 +283,7 @@ The most recent version of the Hierarchical Data Format is HDF5, a
 common archival format for n-dimensional scientific data; it has been
 utilized to store valuable information from astrophysics to earth
 sciences and everything in between. As flexible and powerful as HDF5 can
-be, it comes with big tradeoffs when it's accessed from remote storage
+be, it comes with big trade-offs when it's accessed from remote storage
 systems.
 
 HDF5 is a complex file format; we can think of it as a file system using
@@ -380,7 +380,7 @@ to allow performant partial reads of files.
 
 The test files were originally cloud optimized by ``repacking'' them,
 using a relatively new feature in the HDF5 C API called ``paged
-aggregation''. Page aggregation does 2 things: fisrt, it collects
+aggregation''. Page aggregation does 2 things: first, it collects
 file-level metadata from datasets and stores it on dedicated metadata
 blocks at the front of the file; second, it forces the library to write
 both data and metadata using these fixed-size pages. Aggregation allows
@@ -404,7 +404,7 @@ internally packed once we use paged aggregation on a file.}
 As we can see in Figure~\ref{fig-2}, when we cloud optimize a file using
 paged-aggregation there are some considerations and behavior that we had
 to take into account. The first thing to observe is that page
-aggregation will --as we mentioned-- consolidate the file-evel metadata
+aggregation will --as we mentioned-- consolidate the file-level metadata
 at the front of the file and will add information in the so-called
 superblock\footnote{The HDF5 superblock is a crucial component of the
   HDF5 file format, acting as the starting point for accessing all data
@@ -430,9 +430,9 @@ the file size in a considerable way.}
 \end{figure*}%
 
 This one page size for all approach simplifies how the HDF5 API reads
-the file (if instructucted) but it also brings unused page space and
-chunk over-reads. In the case of the ICESat-2 dataset (ATL03) the data
-itself has been partitioned and each granule represents a segment in the
+the file (if configured) but it also brings unused page space and chunk
+over-reads. In the case of the ICESat-2 dataset (ATL03) the data itself
+has been partitioned and each granule represents a segment in the
 satellite orbit and within the file the most relevant dataset is chunked
 using 10,000 items per chunk, with data being float-32 and using a fast
 compression value, the resulting chunk size is on average under 40KB,
@@ -515,8 +515,8 @@ file, in this case using 10X bigger chunks results in a predictable 10X
 improvement in access times without any cloud optimization involved.
 Having less chunks generates less metadata and bigger requests, in
 general is it recommended that chunk sizes should range between 1MB and
-10MB{[}Add citation, S3 and HDF5{]} and if we have anough memory and
-bandwith even bigger (Pangeo recommends up to 100MB chunks){[}Add
+10MB{[}Add citation, S3 and HDF5{]} and if we have enough memory and
+bandwidth even bigger (Pangeo recommends up to 100MB chunks){[}Add
 citation.{]}}
 
 \end{figure*}%
@@ -557,7 +557,7 @@ aggregation by setting HDF5 library parameters:
   File page strategy: H5F\_FSPACE\_STRATEGY\_PAGE
 \item
   File page size: 8000000 If repacking an existing file, h5repack
-  contains the code to alter tese variables inside the file
+  contains the code to alter these variables inside the file
 \end{enumerate}
 
 \begin{Shaded}
@@ -572,7 +572,7 @@ aggregation by setting HDF5 library parameters:
 \tightlist
 \item
   Avoid using unlimited dimensions when creating variables because the
-  HDF5 API cannot support it inside bffered pages and representation of
+  HDF5 API cannot support it inside buffered pages and representation of
   these variables is not supported by Kerchunk.
 \end{enumerate}
 
