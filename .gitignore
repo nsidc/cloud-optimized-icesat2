@@ -9,3 +9,7 @@ docs
 __pycache__/
 /site_libs/manuscript-notebook/
 .ipynb_checkpoints/
+*.aux
+*.log
+*.pdf
+
