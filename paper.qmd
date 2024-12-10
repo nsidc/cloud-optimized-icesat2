@@ -193,7 +193,8 @@ These numbers are from in-region execution. Out of region is considerable slower
 
 ## Recommendations
 
-We have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development.
+Based on the benckmarks we got from our tests, we have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development.
+These recommendations aim to streamline HDF5 workflows in cloud environments, enhancing performance and reducing costs.
 
 ### Recommended cloud optimizations
 
@@ -218,13 +219,24 @@ Paged aggregation is thus the simplest way of cloud optimizing an HDF5 file as t
 Chunk sizes cannot be larger than the page size and when chunk sizes are smaller we need to take into account how these chunks will fit on a page, in an ideal scenario all the space
 will be filled but that is not the case and we will end up with unused space [See @fig-2].
 
-### Recommended access patterns
 
-In progress
+### Recommended Access Patterns
 
-### Recommended tooling development
+As we saw in our benchmarks, efficient access to cloud optimized HDF5 files in cloud storage requires that we also optimize our access patterns. The following recommendations focus on optimizing workflows for Python users. However, these recommendations should be applicable across programming languages. It's also worth mentioning that the HDF Group aims to include some of these features in their roadmap.
 
-In progress
+- **Efficient Reads**: Efficiently reading cloud-hosted HDF5 files involves minimizing network requests and prioritizing large sequential reads. Configure chunk sizes between 1–10 MB to match the block sizes used in cloud object storage systems, ensuring meaningful data retrieval in each read. Avoid small chunks, as they cause excessive HTTP overhead and slower access speeds.
+- **Parallel Access**: Use parallel computing frameworks like `Dask` or multiprocessing to divide read operations across multiple processes or nodes. This alleviates the sequential access bottleneck caused by the HDF5 global lock, particularly in workflows accessing multiple datasets.
+- **Cache Management**: Implement caching for metadata to avoid repetitive fetches. Tools like `fsspec` or `h5coro` allow in-memory or on-disk caching for frequently accessed data, reducing latency during high-frequency
+- **Regional Access**: Operate workflows in the same cloud region as the data to minimize costs and latency. Cross-region data transfer is expensive and introduces significant delays. Where possible, deploy virtual machines close to the data storage region.
+
+### Recommended Tooling Development
+
+To enable widespread and efficient use of HDF5 files in cloud environments, it is crucial to develop robust tools across all major programming languages. The HDF Group has expressed intentions to include these features in their roadmap, ensuring seamless compatibility with emerging cloud storage and computing standards. This section highlights tooling strategies to support metadata indexing, driver enhancements, and diagnostics, applicable to Python and other languages.
+
+- **Enhanced HDF5 Drivers:** Improve drivers like `h5py` and `ROS3` to better handle cloud object storage's nuances, such as intelligent request batching and speculative reads. This mitigates inefficiencies caused by high-latency networks.
+- **Metadata Indexing:** Develop tools for pre-indexing metadata, similar to Kerchunk. These tools should enable clients to retrieve only necessary data offsets, avoiding full metadata reads and improving access times.
+- **Kerchunk-like Integration:** Extend Kerchunk to integrate seamlessly with analysis libraries like Xarray. This includes building robust sidecar files that efficiently map hierarchical datasets, enabling faster partial reads and enhancing cloud-native workflows.
+- **Diagnostic Tools:** Create tools for diagnostics and performance profiling tailored to cloud-optimized HDF5 files. These tools should identify bottlenecks in access patterns and recommend adjustments in configurations or chunking strategies.
 
 ### Mission implementation
 
@@ -236,11 +248,22 @@ ATL03 is a complex science data product containing both segmented (20 meters alo
 4. Increased the "chunk size" of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no "chunk sizes" exceeded the 8MiB "file space page size".
 5. Introduced a new production step that executes the "h5repack" utility (with no options) to create a "defragmented" final product.
 
-## Discussion
+### Discussion and Further Work
 
-1. Chunking shapes and sizes
-2. Paged aggregation vs User block
-3. Side effects on different access patterns, e.g. Kerchunk
+We believe that implementing cloud optimized HDF5 will greatly improve downstream workflows that will unlock science in the cloud. We also recognize that in order to get there, some key factors in the ecosystem need to be addressed. Chunking strategies, adaptive caching and automatic driver configurations should be developed to optimize performance.
+
+Efforts should expand multi-language support, creating universal interfaces and libraries for broader adoption beyond Python. Cloud-native enhancements must focus on optimizing HDF5 for distributed systems and object storage, addressing egress costs, ease of use and scalability. Finally, advancing ecosystem interoperability involves setting integration standards and aligning with emerging trends such as serverless and edge computing. These efforts, combined with community collaboration, will modernize HDF5 to meet the challenges of evolving data-intensive applications.
+
+
+#### Chunking Shapes and Sizes
+
+Optimizing chunk shapes and sizes is essential for efficient HDF5 usage, especially in cloud environments:
+
+- **Chunk Shape:** Align chunk dimensions with anticipated access patterns. For example, row-oriented queries benefit from row-aligned chunks. 
+- **Chunk Size:** Use chunk sizes between 1–10 MB to match cloud storage block sizes. Larger chunks improve sequential access but require more memory. Smaller chunks support granular reads but may increase network overhead.
+
+Finally, we recognize that this study has not been as extensive as it could have been (cross language, multiple datasets) and yet we think we ran into the key scenarios data producers will face when they start producing cloud optimized HDf5 files. 
+We think that there is room for improvement and experimentation with various configurations based on real-world scenarios is crucial to determine the best performance.
 
 <!-- ## Acknowledgments -->
 
