@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,7 +12,7 @@
 <meta name="author" content="Aleksandar Jelenak">
 <meta name="author" content="Lisa Kaser">
 <meta name="author" content="Jeffrey E. Lee">
-<meta name="dcterms.date" content="2024-10-09">
+<meta name="dcterms.date" content="2024-12-10">
 <meta name="keywords" content="cloud-native, cloud, HDF5, NASA, ICESat-2">
 
 <title>Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</title>
@@ -91,10 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e1e378e796bdd1aa61cf7dc9c87af473.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -111,10 +111,10 @@ We present an implementation of recently available features in the HDF5 stack th
 <meta name="citation_author" content="Aleksandar Jelenak">
 <meta name="citation_author" content="Lisa Kaser">
 <meta name="citation_author" content="Jeffrey E. Lee">
-<meta name="citation_publication_date" content="2024-10-09">
-<meta name="citation_cover_date" content="2024-10-09">
+<meta name="citation_publication_date" content="2024-12-10">
+<meta name="citation_cover_date" content="2024-12-10">
 <meta name="citation_year" content="2024">
-<meta name="citation_online_date" content="2024-10-09">
+<meta name="citation_online_date" content="2024-12-10">
 <meta name="citation_language" content="en">
 <meta name="citation_journal_title" content="Geophysical Research Letters">
 <meta name="citation_reference" content="citation_title=The ice, cloud, and land elevation satellite – 2 mission: A global geolocated photon product derived from the advanced topographic laser altimeter system;,citation_abstract=The Ice, Cloud, and land Elevation Satellite – 2 (ICESat-2) observatory was launched on 15 September 2018 to measure ice sheet and glacier elevation change, sea ice freeboard, and enable the determination of the heights of Earth’s forests. ICESat-2’s laser altimeter, the Advanced Topographic Laser Altimeter System (ATLAS) uses green (532 nm) laser light and single-photon sensitive detection to measure time of flight and subsequently surface height along each of its six beams. In this paper, we describe the major components of ATLAS, including the transmitter, the receiver and the components of the timing system. We present the major components of the ICESat-2 observatory, including the Global Positioning System, star trackers and inertial measurement unit. The ICESat-2 Level 1B data product (ATL02) provides the precise photon round-trip time of flight, among other data. The ICESat-2 Level 2A data product (ATL03) combines the photon times of flight with the observatory position and attitude to determine the geodetic location (i.e. the latitude, longitude and height) of the ground bounce point of photons detected by ATLAS. The ATL03 data product is used by higher-level (Level 3A) surface-specific data products to determine glacier and ice sheet height, sea ice freeboard, vegetation canopy height, ocean surface topography, and inland water body height.;,citation_author=Thomas A. Neumann;,citation_author=Anthony J. Martino;,citation_author=Thorsten Markus;,citation_author=Sungkoo Bae;,citation_author=Megan R. Bock;,citation_author=Anita C. Brenner;,citation_author=Kelly M. Brunt;,citation_author=John Cavanaugh;,citation_author=Stanley T. Fernandes;,citation_author=David W. Hancock;,citation_author=Kaitlin Harbeck;,citation_author=Jeffrey Lee;,citation_author=Nathan T. Kurtz;,citation_author=Philip J. Luers;,citation_author=Scott B. Luthcke;,citation_author=Lori Magruder;,citation_author=Teresa A. Pennington;,citation_author=Luis Ramos-Izquierdo;,citation_author=Timothy Rebold;,citation_author=Jonah Skoog;,citation_author=Taylor C. Thomas;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S003442571930344X;,citation_doi=https://doi.org/10.1016/j.rse.2019.111325;,citation_issn=0034-4257;,citation_volume=233;,citation_journal_title=Remote Sensing of Environment;">
@@ -202,7 +202,7 @@ We present an implementation of recently available features in the HDF5 stack th
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">October 9, 2024</p>
+              <p class="date">December 10, 2024</p>
             </div>
           </div>
           
@@ -241,12 +241,12 @@ We present an implementation of recently available features in the HDF5 stack th
   <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations"><span class="header-section-number">4</span> Recommendations</a>
   <ul class="collapse">
   <li><a href="#recommended-cloud-optimizations" id="toc-recommended-cloud-optimizations" class="nav-link" data-scroll-target="#recommended-cloud-optimizations"><span class="header-section-number">4.1</span> Recommended cloud optimizations</a></li>
-  <li><a href="#recommended-access-patterns" id="toc-recommended-access-patterns" class="nav-link" data-scroll-target="#recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended access patterns</a></li>
-  <li><a href="#recommended-tooling-development" id="toc-recommended-tooling-development" class="nav-link" data-scroll-target="#recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended tooling development</a></li>
+  <li><a href="#recommended-access-patterns" id="toc-recommended-access-patterns" class="nav-link" data-scroll-target="#recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended Access Patterns</a></li>
+  <li><a href="#recommended-tooling-development" id="toc-recommended-tooling-development" class="nav-link" data-scroll-target="#recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended Tooling Development</a></li>
   <li><a href="#mission-implementation" id="toc-mission-implementation" class="nav-link" data-scroll-target="#mission-implementation"><span class="header-section-number">4.4</span> Mission implementation</a></li>
+  <li><a href="#discussion-and-further-work" id="toc-discussion-and-further-work" class="nav-link" data-scroll-target="#discussion-and-further-work"><span class="header-section-number">4.5</span> Discussion and Further Work</a></li>
   </ul></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="header-section-number">5</span> Discussion</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">6</span> References</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">5</span> References</a></li>
   </ul>
 <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="notebooks/h5py-atl03-preview.html"><i class="bi bi-journal-code"></i>Testing access times to cloud optimized HDF5 files with the fsspec and ROS3 drivers.</a></li></ul></div></nav>
 </div>
@@ -430,7 +430,7 @@ Figure&nbsp;5: shows that performance once the I/O configuration is aligned with
 </section>
 <section id="recommendations" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="recommendations"><span class="header-section-number">4</span> Recommendations</h2>
-<p>We have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development.</p>
+<p>Based on the benckmarks we got from our tests, we have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development. These recommendations aim to streamline HDF5 workflows in cloud environments, enhancing performance and reducing costs.</p>
 <section id="recommended-cloud-optimizations" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="recommended-cloud-optimizations"><span class="header-section-number">4.1</span> Recommended cloud optimizations</h3>
 <p>Based on our testing we recommend the following cloud optimizations for creating HDF5 files for the ATL03 product: Create HDF5 files using paged aggregation by setting HDF5 library parameters:</p>
@@ -449,12 +449,24 @@ Figure&nbsp;5: shows that performance once the I/O configuration is aligned with
 </section>
 </section>
 <section id="recommended-access-patterns" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended access patterns</h3>
-<p>In progress</p>
+<h3 data-number="4.2" class="anchored" data-anchor-id="recommended-access-patterns"><span class="header-section-number">4.2</span> Recommended Access Patterns</h3>
+<p>As we saw in our benchmarks, efficient access to cloud optimized HDF5 files in cloud storage requires that we also optimize our access patterns. The following recommendations focus on optimizing workflows for Python users. However, these recommendations should be applicable across programming languages. It’s also worth mentioning that the HDF Group aims to include some of these features in their roadmap.</p>
+<ul>
+<li><strong>Efficient Reads</strong>: Efficiently reading cloud-hosted HDF5 files involves minimizing network requests and prioritizing large sequential reads. Configure chunk sizes between 1–10 MB to match the block sizes used in cloud object storage systems, ensuring meaningful data retrieval in each read. Avoid small chunks, as they cause excessive HTTP overhead and slower access speeds.</li>
+<li><strong>Parallel Access</strong>: Use parallel computing frameworks like <code>Dask</code> or multiprocessing to divide read operations across multiple processes or nodes. This alleviates the sequential access bottleneck caused by the HDF5 global lock, particularly in workflows accessing multiple datasets.</li>
+<li><strong>Cache Management</strong>: Implement caching for metadata to avoid repetitive fetches. Tools like <code>fsspec</code> or <code>h5coro</code> allow in-memory or on-disk caching for frequently accessed data, reducing latency during high-frequency</li>
+<li><strong>Regional Access</strong>: Operate workflows in the same cloud region as the data to minimize costs and latency. Cross-region data transfer is expensive and introduces significant delays. Where possible, deploy virtual machines close to the data storage region.</li>
+</ul>
 </section>
 <section id="recommended-tooling-development" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended tooling development</h3>
-<p>In progress</p>
+<h3 data-number="4.3" class="anchored" data-anchor-id="recommended-tooling-development"><span class="header-section-number">4.3</span> Recommended Tooling Development</h3>
+<p>To enable widespread and efficient use of HDF5 files in cloud environments, it is crucial to develop robust tools across all major programming languages. The HDF Group has expressed intentions to include these features in their roadmap, ensuring seamless compatibility with emerging cloud storage and computing standards. This section highlights tooling strategies to support metadata indexing, driver enhancements, and diagnostics, applicable to Python and other languages.</p>
+<ul>
+<li><strong>Enhanced HDF5 Drivers:</strong> Improve drivers like <code>h5py</code> and <code>ROS3</code> to better handle cloud object storage’s nuances, such as intelligent request batching and speculative reads. This mitigates inefficiencies caused by high-latency networks.</li>
+<li><strong>Metadata Indexing:</strong> Develop tools for pre-indexing metadata, similar to Kerchunk. These tools should enable clients to retrieve only necessary data offsets, avoiding full metadata reads and improving access times.</li>
+<li><strong>Kerchunk-like Integration:</strong> Extend Kerchunk to integrate seamlessly with analysis libraries like Xarray. This includes building robust sidecar files that efficiently map hierarchical datasets, enabling faster partial reads and enhancing cloud-native workflows.</li>
+<li><strong>Diagnostic Tools:</strong> Create tools for diagnostics and performance profiling tailored to cloud-optimized HDF5 files. These tools should identify bottlenecks in access patterns and recommend adjustments in configurations or chunking strategies.</li>
+</ul>
 </section>
 <section id="mission-implementation" class="level3" data-number="4.4">
 <h3 data-number="4.4" class="anchored" data-anchor-id="mission-implementation"><span class="header-section-number">4.4</span> Mission implementation</h3>
@@ -467,18 +479,24 @@ Figure&nbsp;5: shows that performance once the I/O configuration is aligned with
 <li>Introduced a new production step that executes the “h5repack” utility (with no options) to create a “defragmented” final product.</li>
 </ol>
 </section>
-</section>
-<section id="discussion" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="discussion"><span class="header-section-number">5</span> Discussion</h2>
-<ol type="1">
-<li>Chunking shapes and sizes</li>
-<li>Paged aggregation vs User block</li>
-<li>Side effects on different access patterns, e.g.&nbsp;Kerchunk</li>
-</ol>
+<section id="discussion-and-further-work" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="discussion-and-further-work"><span class="header-section-number">4.5</span> Discussion and Further Work</h3>
+<p>We believe that implementing cloud optimized HDF5 will greatly improve downstream workflows that will unlock science in the cloud. We also recognize that in order to get there, some key factors in the ecosystem need to be addressed. Chunking strategies, adaptive caching and automatic driver configurations should be developed to optimize performance.</p>
+<p>Efforts should expand multi-language support, creating universal interfaces and libraries for broader adoption beyond Python. Cloud-native enhancements must focus on optimizing HDF5 for distributed systems and object storage, addressing egress costs, ease of use and scalability. Finally, advancing ecosystem interoperability involves setting integration standards and aligning with emerging trends such as serverless and edge computing. These efforts, combined with community collaboration, will modernize HDF5 to meet the challenges of evolving data-intensive applications.</p>
+<section id="chunking-shapes-and-sizes" class="level4" data-number="4.5.1">
+<h4 data-number="4.5.1" class="anchored" data-anchor-id="chunking-shapes-and-sizes"><span class="header-section-number">4.5.1</span> Chunking Shapes and Sizes</h4>
+<p>Optimizing chunk shapes and sizes is essential for efficient HDF5 usage, especially in cloud environments:</p>
+<ul>
+<li><strong>Chunk Shape:</strong> Align chunk dimensions with anticipated access patterns. For example, row-oriented queries benefit from row-aligned chunks.</li>
+<li><strong>Chunk Size:</strong> Use chunk sizes between 1–10 MB to match cloud storage block sizes. Larger chunks improve sequential access but require more memory. Smaller chunks support granular reads but may increase network overhead.</li>
+</ul>
+<p>Finally, we recognize that this study has not been as extensive as it could have been (cross language, multiple datasets) and yet we think we ran into the key scenarios data producers will face when they start producing cloud optimized HDf5 files. We think that there is room for improvement and experimentation with various configurations based on real-world scenarios is crucial to determine the best performance.</p>
 <!-- ## Acknowledgments -->
 </section>
-<section id="references" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="references"><span class="header-section-number">6</span> References</h2>
+</section>
+</section>
+<section id="references" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="references"><span class="header-section-number">5</span> References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
 <div id="ref-Hoyer2017-su" class="csl-entry" role="listitem">
 Hoyer, S., &amp; Hamman, J. (2017). Xarray: <span>N-D</span> labeled arrays and datasets in python. <em>J. Open Res. Softw.</em>, <em>5</em>(1), 10.
@@ -513,7 +531,7 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
     Jelenak, Aleksandar and Kaser, Lisa and E. Lee, Jeffrey},
   title = {Evaluating {Cloud-Optimized} {HDF5} for {NASA’s} {ICESat-2}
     {Mission}},
-  date = {2024-10-09},
+  date = {2024-12-10},
   langid = {en},
   abstract = {The Hierarchical Data Format (HDF) is a common archival
     format for n-dimensional scientific data; it has been utilized to
@@ -535,8 +553,8 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-a._lopez2024" class="csl-entry quarto-appendix-citeas" role="listitem">
 A. Lopez, L., P. Barrett, A., Steiker, A., Jelenak, A., Kaser, L., &amp;
-E. Lee, J. (2024, October 9). Evaluating Cloud-Optimized HDF5 for NASA’s
-ICESat-2 Mission.
+E. Lee, J. (2024, December 10). Evaluating Cloud-Optimized HDF5 for
+NASA’s ICESat-2 Mission.
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -621,8 +639,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -733,7 +749,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -960,7 +975,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","openEffect":"zoom","loop":false,"closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

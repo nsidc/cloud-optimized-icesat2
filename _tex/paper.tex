@@ -118,15 +118,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
 % definitions for citeproc citations
@@ -210,9 +212,6 @@
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
 
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
 \usepackage{bookmark}
 
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
@@ -336,7 +335,7 @@ exponentially bigger than local access (MDN, 2024) (Scott, 2020).
 
 \centering{
 
-\includegraphics{figures/figure-1.png}
+\pandocbounded{\includegraphics[keepaspectratio]{figures/figure-1.png}}
 
 }
 
@@ -392,7 +391,7 @@ chunk behavior.
 
 \centering{
 
-\includegraphics{figures/figure-2.png}
+\pandocbounded{\includegraphics[keepaspectratio]{figures/figure-2.png}}
 
 }
 
@@ -419,7 +418,7 @@ adjust to the total metadata size.
 
 \centering{
 
-\includegraphics{figures/figure-3.png}
+\pandocbounded{\includegraphics[keepaspectratio]{figures/figure-3.png}}
 
 }
 
@@ -442,13 +441,13 @@ testing different page sizes, and increase chunk size. The following
 table describes the different configurations used in our tests.
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1589}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.3444}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1457}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0993}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0728}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0728}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1060}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1589}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.3444}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1457}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0993}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0728}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0728}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1060}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 prefix
@@ -501,7 +500,7 @@ is in the attached notebooks.
 
 \centering{
 
-\includegraphics{figures/figure-4.png}
+\pandocbounded{\includegraphics[keepaspectratio]{figures/figure-4.png}}
 
 }
 
@@ -525,7 +524,7 @@ citation.{]}}
 
 \centering{
 
-\includegraphics{figures/figure-5.png}
+\pandocbounded{\includegraphics[keepaspectratio]{figures/figure-5.png}}
 
 }
 
@@ -539,9 +538,11 @@ the non cloud optimized case.}
 
 \section{Recommendations}\label{recommendations}
 
-We have split our recommendations for the ATL03 product into 3 main
-categories, creating the files, accessing the files, and future tool
-development.
+Based on the benckmarks we got from our tests, we have split our
+recommendations for the ATL03 product into 3 main categories, creating
+the files, accessing the files, and future tool development. These
+recommendations aim to streamline HDF5 workflows in cloud environments,
+enhancing performance and reducing costs.
 
 \subsection{Recommended cloud
 optimizations}\label{recommended-cloud-optimizations}
@@ -596,15 +597,77 @@ need to take into account how these chunks will fit on a page, in an
 ideal scenario all the space will be filled but that is not the case and
 we will end up with unused space See~\ref{fig-2}.
 
-\subsection{Recommended access
-patterns}\label{recommended-access-patterns}
+\subsection{Recommended Access
+Patterns}\label{recommended-access-patterns}
 
-In progress
+As we saw in our benchmarks, efficient access to cloud optimized HDF5
+files in cloud storage requires that we also optimize our access
+patterns. The following recommendations focus on optimizing workflows
+for Python users. However, these recommendations should be applicable
+across programming languages. It's also worth mentioning that the HDF
+Group aims to include some of these features in their roadmap.
 
-\subsection{Recommended tooling
-development}\label{recommended-tooling-development}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Efficient Reads}: Efficiently reading cloud-hosted HDF5 files
+  involves minimizing network requests and prioritizing large sequential
+  reads. Configure chunk sizes between 1--10 MB to match the block sizes
+  used in cloud object storage systems, ensuring meaningful data
+  retrieval in each read. Avoid small chunks, as they cause excessive
+  HTTP overhead and slower access speeds.
+\item
+  \textbf{Parallel Access}: Use parallel computing frameworks like
+  \texttt{Dask} or multiprocessing to divide read operations across
+  multiple processes or nodes. This alleviates the sequential access
+  bottleneck caused by the HDF5 global lock, particularly in workflows
+  accessing multiple datasets.
+\item
+  \textbf{Cache Management}: Implement caching for metadata to avoid
+  repetitive fetches. Tools like \texttt{fsspec} or \texttt{h5coro}
+  allow in-memory or on-disk caching for frequently accessed data,
+  reducing latency during high-frequency
+\item
+  \textbf{Regional Access}: Operate workflows in the same cloud region
+  as the data to minimize costs and latency. Cross-region data transfer
+  is expensive and introduces significant delays. Where possible, deploy
+  virtual machines close to the data storage region.
+\end{itemize}
 
-In progress
+\subsection{Recommended Tooling
+Development}\label{recommended-tooling-development}
+
+To enable widespread and efficient use of HDF5 files in cloud
+environments, it is crucial to develop robust tools across all major
+programming languages. The HDF Group has expressed intentions to include
+these features in their roadmap, ensuring seamless compatibility with
+emerging cloud storage and computing standards. This section highlights
+tooling strategies to support metadata indexing, driver enhancements,
+and diagnostics, applicable to Python and other languages.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Enhanced HDF5 Drivers:} Improve drivers like \texttt{h5py} and
+  \texttt{ROS3} to better handle cloud object storage's nuances, such as
+  intelligent request batching and speculative reads. This mitigates
+  inefficiencies caused by high-latency networks.
+\item
+  \textbf{Metadata Indexing:} Develop tools for pre-indexing metadata,
+  similar to Kerchunk. These tools should enable clients to retrieve
+  only necessary data offsets, avoiding full metadata reads and
+  improving access times.
+\item
+  \textbf{Kerchunk-like Integration:} Extend Kerchunk to integrate
+  seamlessly with analysis libraries like Xarray. This includes building
+  robust sidecar files that efficiently map hierarchical datasets,
+  enabling faster partial reads and enhancing cloud-native workflows.
+\item
+  \textbf{Diagnostic Tools:} Create tools for diagnostics and
+  performance profiling tailored to cloud-optimized HDF5 files. These
+  tools should identify bottlenecks in access patterns and recommend
+  adjustments in configurations or chunking strategies.
+\end{itemize}
 
 \subsection{Mission implementation}\label{mission-implementation}
 
@@ -635,18 +698,51 @@ ATL03 products, while minimizing increases in file size:
   utility (with no options) to create a ``defragmented'' final product.
 \end{enumerate}
 
-\section{Discussion}\label{discussion}
+\subsection{Discussion and Further
+Work}\label{discussion-and-further-work}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+We believe that implementing cloud optimized HDF5 will greatly improve
+downstream workflows that will unlock science in the cloud. We also
+recognize that in order to get there, some key factors in the ecosystem
+need to be addressed. Chunking strategies, adaptive caching and
+automatic driver configurations should be developed to optimize
+performance.
+
+Efforts should expand multi-language support, creating universal
+interfaces and libraries for broader adoption beyond Python.
+Cloud-native enhancements must focus on optimizing HDF5 for distributed
+systems and object storage, addressing egress costs, ease of use and
+scalability. Finally, advancing ecosystem interoperability involves
+setting integration standards and aligning with emerging trends such as
+serverless and edge computing. These efforts, combined with community
+collaboration, will modernize HDF5 to meet the challenges of evolving
+data-intensive applications.
+
+\subsubsection{Chunking Shapes and
+Sizes}\label{chunking-shapes-and-sizes}
+
+Optimizing chunk shapes and sizes is essential for efficient HDF5 usage,
+especially in cloud environments:
+
+\begin{itemize}
 \tightlist
 \item
-  Chunking shapes and sizes
+  \textbf{Chunk Shape:} Align chunk dimensions with anticipated access
+  patterns. For example, row-oriented queries benefit from row-aligned
+  chunks.
 \item
-  Paged aggregation vs User block
-\item
-  Side effects on different access patterns, e.g.~Kerchunk
-\end{enumerate}
+  \textbf{Chunk Size:} Use chunk sizes between 1--10 MB to match cloud
+  storage block sizes. Larger chunks improve sequential access but
+  require more memory. Smaller chunks support granular reads but may
+  increase network overhead.
+\end{itemize}
+
+Finally, we recognize that this study has not been as extensive as it
+could have been (cross language, multiple datasets) and yet we think we
+ran into the key scenarios data producers will face when they start
+producing cloud optimized HDf5 files. We think that there is room for
+improvement and experimentation with various configurations based on
+real-world scenarios is crucial to determine the best performance.
 
 \section{References}\label{references}
 
