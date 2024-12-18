@@ -135,8 +135,8 @@ shows how file-level metadata and data gets internally packed once we use paged 
 :::
 
 As we can see in [@fig-2], when we cloud optimize a file using paged-aggregation there are some considerations and behavior that we had to take into account. The first thing to observe is that 
-page aggregation will --as we mentioned-- consolidate the file-level metadata at the front of the file and will add information in the so-called superblock^[The HDF5 superblock is a crucial component of the HDF5 file format, acting as the starting point for accessing all data within the file. It stores important metadata such as the version of the file format, pointers to the root group, and addresses for locating different file components]
-The next thing to notice is that page size us uses across the board for metadata and data as of October 2024 and version 1.14 of the HDF5 library, page size cannot dynamically adjust to the total metadata size. 
+page aggregation will -- as we mentioned -- consolidate the file-level metadata at the front of the file and will add information in the so-called superblock^[The HDF5 superblock is a crucial component of the HDF5 file format, acting as the starting point for accessing all data within the file. It stores important metadata such as the version of the file format, pointers to the root group, and addresses for locating different file components]
+The next thing to notice is page size is used across the board for metadata and data as of October 2024 and version 1.14 of the HDF5 library, page size cannot dynamically adjust to the total metadata size. 
 
 ::: {#fig-3 fig-env="figure*"}
 
@@ -160,8 +160,8 @@ for an HTTP request, especially when we have to read them sequentially. Because 
 | rechunked-8mb          	| page-aggregated and bigger chunk sizes             	| ~1%                  	| 10km          	| (100000,) 	| 8MB       	| 400kb          	|
 | rechunked-8mb-kerchunk 	| kerchunk sidecar of the last paged-aggregated file 	| N/A                  	| 10km          	| (100000,)  	| 8MB       	| 400kb          	|
 
-This table represents the different configurations we used for our tests in 2 file sizes. It's worth noticing that we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max)
-We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing is explained in the next section and the code
+This table represents the different configurations we used for our tests in 2 file sizes. It's worth noticing we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max)
+We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing are explained in the next section and the code
 to reproduce the results is in the attached notebooks.
 
 ## Results
@@ -171,7 +171,7 @@ to reproduce the results is in the attached notebooks.
 
 ![](figures/figure-4.png)
 
-shows that using paged aggregation alone is not a complete solution. This behavior us caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize 
+Using paged aggregation alone is not a complete solution. This behavior is caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize 
 the requests. This means that if we cloud optimize alone and use the same code, in some cases we'll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved.
 Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have enough memory and bandwidth even
 bigger (Pangeo recommends up to 100MB chunks)[Add citation.]
@@ -184,8 +184,8 @@ bigger (Pangeo recommends up to 100MB chunks)[Add citation.]
 
 ![](figures/figure-5.png)
 
-shows that performance once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. 
-These numbers are from in-region execution. Out of region is considerable slower for the non cloud optimized case.
+Once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. 
+These numbers are from in-region execution. Out of region is considerably slower for the non-cloud-optimized case.
 
 :::
 
@@ -193,25 +193,25 @@ These numbers are from in-region execution. Out of region is considerable slower
 
 ## Recommendations
 
-Based on the benckmarks we got from our tests, we have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development.
+Based on the benckmarks we got from our tests, we have split our recommendations for the ATL03 product into 3 main categories: creating the files, accessing the files, and future tool development.
 These recommendations aim to streamline HDF5 workflows in cloud environments, enhancing performance and reducing costs.
 
 ### Recommended cloud optimizations
 
 Based on our testing we recommend the following cloud optimizations for creating HDF5 files for the ATL03 product:
-Create HDF5 files using paged aggregation by setting HDF5 library parameters:
 
-1. File page strategy: H5F_FSPACE_STRATEGY_PAGE
-2. File page size: 8000000
-  If repacking an existing file, h5repack contains the code to alter these variables inside the file 
-  ```bash
-   h5repack -S PAGE -G 8000000 input.h5 output.h5
-  ```
+1. Create HDF5 files using paged aggregation by setting HDF5 library parameters:
+    a. File page strategy: H5F_FSPACE_STRATEGY_PAGE
+    b. File page size: 8000000
+      If repacking an existing file, h5repack contains the code to alter these variables inside the file 
+      ```bash
+       h5repack -S PAGE -G 8000000 input.h5 output.h5
+      ```
 3. Avoid using unlimited dimensions when creating variables because the HDF5 API cannot support it inside buffered pages and representation of these variables is not supported by Kerchunk.
 
 #### Reasoning
 
-Based on the variable size of ATL03 it becomes really difficult to allocate a fixed metadata page, big files contain north of 30MB of metadata, but the median sized file is below 8MB. If we had
+Based on the variable size of ATL03 it becomes really difficult to allocate a fixed metadata page. Big files contain north of 30MB of metadata, but the median metadata size per file is below 8MB. If we had
 adopted user block we would have caused an increase in the file size and storage cost of approximate 30% (reference to our tests). Another consequence of using a dedicated fixed page for file-level metadata is
 that metadata overflow will generate the same impact in access times, the library will fetch the metadata in one go but the rest will be using the predefined block size of 4kb. 
 
@@ -225,7 +225,7 @@ will be filled but that is not the case and we will end up with unused space [Se
 As we saw in our benchmarks, efficient access to cloud optimized HDF5 files in cloud storage requires that we also optimize our access patterns. The following recommendations focus on optimizing workflows for Python users. However, these recommendations should be applicable across programming languages. It's also worth mentioning that the HDF Group aims to include some of these features in their roadmap.
 
 - **Efficient Reads**: Efficiently reading cloud-hosted HDF5 files involves minimizing network requests and prioritizing large sequential reads. Configure chunk sizes between 1–10 MB to match the block sizes used in cloud object storage systems, ensuring meaningful data retrieval in each read. Avoid small chunks, as they cause excessive HTTP overhead and slower access speeds.
-- **Parallel Access**: Use parallel computing frameworks like `Dask` or multiprocessing to divide read operations across multiple processes or nodes. This alleviates the sequential access bottleneck caused by the HDF5 global lock, particularly in workflows accessing multiple datasets.
+- **Parallel Access**: Use parallel computing frameworks like [`Dask`](https://www.dask.org/) or multiprocessing to divide read operations across multiple processes or nodes. This alleviates the sequential access bottleneck caused by the HDF5 global lock, particularly in workflows accessing multiple datasets.
 - **Cache Management**: Implement caching for metadata to avoid repetitive fetches. Tools like `fsspec` or `h5coro` allow in-memory or on-disk caching for frequently accessed data, reducing latency during high-frequency
 - **Regional Access**: Operate workflows in the same cloud region as the data to minimize costs and latency. Cross-region data transfer is expensive and introduces significant delays. Where possible, deploy virtual machines close to the data storage region.
 
@@ -240,13 +240,13 @@ To enable widespread and efficient use of HDF5 files in cloud environments, it i
 
 ### Mission implementation
 
-ATL03 is a complex science data product containing both segmented (20 meters along-track) and large, variable-rate photon datasets. ATL03 is created using pipeline-style processing where the science data and NetCDF-style metadata are written by independent software packages.  The following steps were employed to create cloud-optimized Release 007 ATL03 products, while minimizing increases in file size:
+ATL03 is a complex science data product containing both segmented (20 meters along-track) and large, variable-rate photon datasets. ATL03 is created using pipeline-style processing where the science data and NetCDF-style metadata are written by independent software packages. The following steps were employed to create cloud-optimized Release 007 ATL03 products, while minimizing increases in file size:
  
 1. Set the "file space strategy" to H5F_FSPACE_STRATEGY_PAGE and enabled "free space tracking" within the HDF5 file creation property list.
 2. Set the "file space page size" to 8MiB.
-3. Changed all "COMPACT" dataset storage types to "CONTIGUOUS".
-4. Increased the "chunk size" of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no "chunk sizes" exceeded the 8MiB "file space page size".
-5. Introduced a new production step that executes the "h5repack" utility (with no options) to create a "defragmented" final product.
+3. Change all "COMPACT" dataset storage types to "CONTIGUOUS".
+4. Increase the "chunk size" of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no "chunk sizes" exceed the 8MiB "file space page size".
+5. Introduce a new production step that executes the "h5repack" utility (with no options) to create a "defragmented" final product.
 
 ### Discussion and Further Work
 
