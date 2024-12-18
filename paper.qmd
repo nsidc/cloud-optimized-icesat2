@@ -160,8 +160,7 @@ for an HTTP request, especially when we have to read them sequentially. Because 
 | rechunked-8mb          	| page-aggregated and bigger chunk sizes             	| ~1%                  	| 10km          	| (100000,) 	| 8MB       	| 400kb          	|
 | rechunked-8mb-kerchunk 	| kerchunk sidecar of the last paged-aggregated file 	| N/A                  	| 10km          	| (100000,)  	| 8MB       	| 400kb          	|
 
-This table represents the different configurations we used for our tests in 2 file sizes. It's worth noticing we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max)
-We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing are explained in the next section and the code
+This table represents the different configurations we used for our tests in 2 file sizes. It's worth noticing we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max). We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing are explained in the next section and the code
 to reproduce the results is in the attached notebooks.
 
 ## Results
