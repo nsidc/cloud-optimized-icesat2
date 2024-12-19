@@ -12,7 +12,7 @@
 <meta name="author" content="Aleksandar Jelenak">
 <meta name="author" content="Lisa Kaser">
 <meta name="author" content="Jeffrey E. Lee">
-<meta name="dcterms.date" content="2024-12-10">
+<meta name="dcterms.date" content="2024-12-19">
 <meta name="keywords" content="cloud-native, cloud, HDF5, NASA, ICESat-2">
 
 <title>Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</title>
@@ -111,10 +111,10 @@ We present an implementation of recently available features in the HDF5 stack th
 <meta name="citation_author" content="Aleksandar Jelenak">
 <meta name="citation_author" content="Lisa Kaser">
 <meta name="citation_author" content="Jeffrey E. Lee">
-<meta name="citation_publication_date" content="2024-12-10">
-<meta name="citation_cover_date" content="2024-12-10">
+<meta name="citation_publication_date" content="2024-12-19">
+<meta name="citation_cover_date" content="2024-12-19">
 <meta name="citation_year" content="2024">
-<meta name="citation_online_date" content="2024-12-10">
+<meta name="citation_online_date" content="2024-12-19">
 <meta name="citation_language" content="en">
 <meta name="citation_journal_title" content="Geophysical Research Letters">
 <meta name="citation_reference" content="citation_title=The ice, cloud, and land elevation satellite – 2 mission: A global geolocated photon product derived from the advanced topographic laser altimeter system;,citation_abstract=The Ice, Cloud, and land Elevation Satellite – 2 (ICESat-2) observatory was launched on 15 September 2018 to measure ice sheet and glacier elevation change, sea ice freeboard, and enable the determination of the heights of Earth’s forests. ICESat-2’s laser altimeter, the Advanced Topographic Laser Altimeter System (ATLAS) uses green (532 nm) laser light and single-photon sensitive detection to measure time of flight and subsequently surface height along each of its six beams. In this paper, we describe the major components of ATLAS, including the transmitter, the receiver and the components of the timing system. We present the major components of the ICESat-2 observatory, including the Global Positioning System, star trackers and inertial measurement unit. The ICESat-2 Level 1B data product (ATL02) provides the precise photon round-trip time of flight, among other data. The ICESat-2 Level 2A data product (ATL03) combines the photon times of flight with the observatory position and attitude to determine the geodetic location (i.e. the latitude, longitude and height) of the ground bounce point of photons detected by ATLAS. The ATL03 data product is used by higher-level (Level 3A) surface-specific data products to determine glacier and ice sheet height, sea ice freeboard, vegetation canopy height, ocean surface topography, and inland water body height.;,citation_author=Thomas A. Neumann;,citation_author=Anthony J. Martino;,citation_author=Thorsten Markus;,citation_author=Sungkoo Bae;,citation_author=Megan R. Bock;,citation_author=Anita C. Brenner;,citation_author=Kelly M. Brunt;,citation_author=John Cavanaugh;,citation_author=Stanley T. Fernandes;,citation_author=David W. Hancock;,citation_author=Kaitlin Harbeck;,citation_author=Jeffrey Lee;,citation_author=Nathan T. Kurtz;,citation_author=Philip J. Luers;,citation_author=Scott B. Luthcke;,citation_author=Lori Magruder;,citation_author=Teresa A. Pennington;,citation_author=Luis Ramos-Izquierdo;,citation_author=Timothy Rebold;,citation_author=Jonah Skoog;,citation_author=Taylor C. Thomas;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S003442571930344X;,citation_doi=https://doi.org/10.1016/j.rse.2019.111325;,citation_issn=0034-4257;,citation_volume=233;,citation_journal_title=Remote Sensing of Environment;">
@@ -202,7 +202,7 @@ We present an implementation of recently available features in the HDF5 stack th
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">December 10, 2024</p>
+              <p class="date">December 19, 2024</p>
             </div>
           </div>
           
@@ -304,7 +304,7 @@ Figure&nbsp;2: shows how file-level metadata and data gets internally packed onc
 </figcaption>
 </figure>
 </div>
-<p>As we can see in <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>, when we cloud optimize a file using paged-aggregation there are some considerations and behavior that we had to take into account. The first thing to observe is that page aggregation will –as we mentioned– consolidate the file-level metadata at the front of the file and will add information in the so-called superblock<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> The next thing to notice is that page size us uses across the board for metadata and data as of October 2024 and version 1.14 of the HDF5 library, page size cannot dynamically adjust to the total metadata size.</p>
+<p>As we can see in <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>, when we cloud optimize a file using paged-aggregation there are some considerations and behavior that we had to take into account. The first thing to observe is that page aggregation will – as we mentioned – consolidate the file-level metadata at the front of the file and will add information in the so-called superblock<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> The next thing to notice is page size is used across the board for metadata and data as of October 2024 and version 1.14 of the HDF5 library, page size cannot dynamically adjust to the total metadata size.</p>
 <div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -403,48 +403,49 @@ Figure&nbsp;3: shows how file-level metadata and data packing inside aggregated 
 </tr>
 </tbody>
 </table>
-<p>This table represents the different configurations we used for our tests in 2 file sizes. It’s worth noticing that we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max) We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing is explained in the next section and the code to reproduce the results is in the attached notebooks.</p>
+<p>This table represents the different configurations we used for our tests in 2 file sizes. It’s worth noticing we encountered a few outlier cases where compression and chunk sizes led page aggregation to an increase in file size of approximately 10% which was above the desired value for NSIDC (5% max). We tested these files using the most common libraries to handle HDF5 and 2 different I/O drivers that support remote access to AWS S3, fsspec and the native S3. The results of our testing are explained in the next section and the code to reproduce the results is in the attached notebooks.</p>
 </section>
 <section id="results" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="results"><span class="header-section-number">3</span> Results</h2>
 <div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figures/figure-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: shows that using paged aggregation alone is not a complete solution. This behavior us caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize the requests. This means that if we cloud optimize alone and use the same code, in some cases we’ll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved. Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have enough memory and bandwidth even bigger (Pangeo recommends up to 100MB chunks)[Add citation.]"><img src="figures/figure-4.png" class="img-fluid figure-img"></a>
+<a href="figures/figure-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Using paged aggregation alone is not a complete solution. This behavior is caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize the requests. This means that if we cloud optimize alone and use the same code, in some cases we’ll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved. Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have enough memory and bandwidth even bigger (Pangeo recommends up to 100MB chunks)[Add citation.]"><img src="figures/figure-4.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: shows that using paged aggregation alone is not a complete solution. This behavior us caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize the requests. This means that if we cloud optimize alone and use the same code, in some cases we’ll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved. Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have enough memory and bandwidth even bigger (Pangeo recommends up to 100MB chunks)[Add citation.]
+Figure&nbsp;4: Using paged aggregation alone is not a complete solution. This behavior is caused by over-reads of data now distributed in pages and the internals of HDF5 not knowing how to optimize the requests. This means that if we cloud optimize alone and use the same code, in some cases we’ll make access to these files even slower. A very important thing to notice here is that rechunking the file, in this case using 10X bigger chunks results in a predictable 10X improvement in access times without any cloud optimization involved. Having less chunks generates less metadata and bigger requests, in general is it recommended that chunk sizes should range between 1MB and 10MB[Add citation, S3 and HDF5] and if we have enough memory and bandwidth even bigger (Pangeo recommends up to 100MB chunks)[Add citation.]
 </figcaption>
 </figure>
 </div>
 <div id="fig-5" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-env="figure*">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="figures/figure-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: shows that performance once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. These numbers are from in-region execution. Out of region is considerable slower for the non cloud optimized case."><img src="figures/figure-5.png" class="img-fluid figure-img"></a>
+<a href="figures/figure-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. These numbers are from in-region execution. Out of region is considerably slower for the non-cloud-optimized case."><img src="figures/figure-5.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: shows that performance once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. These numbers are from in-region execution. Out of region is considerable slower for the non cloud optimized case.
+Figure&nbsp;5: Once the I/O configuration is aligned with the chunking in the file, access times perform on par with cloud optimized access patterns like Kerchunk/Zarr. These numbers are from in-region execution. Out of region is considerably slower for the non-cloud-optimized case.
 </figcaption>
 </figure>
 </div>
 </section>
 <section id="recommendations" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="recommendations"><span class="header-section-number">4</span> Recommendations</h2>
-<p>Based on the benckmarks we got from our tests, we have split our recommendations for the ATL03 product into 3 main categories, creating the files, accessing the files, and future tool development. These recommendations aim to streamline HDF5 workflows in cloud environments, enhancing performance and reducing costs.</p>
+<p>Based on the benckmarks we got from our tests, we have split our recommendations for the ATL03 product into 3 main categories: creating the files, accessing the files, and future tool development. These recommendations aim to streamline HDF5 workflows in cloud environments, enhancing performance and reducing costs.</p>
 <section id="recommended-cloud-optimizations" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="recommended-cloud-optimizations"><span class="header-section-number">4.1</span> Recommended cloud optimizations</h3>
-<p>Based on our testing we recommend the following cloud optimizations for creating HDF5 files for the ATL03 product: Create HDF5 files using paged aggregation by setting HDF5 library parameters:</p>
+<p>Based on our testing we recommend the following cloud optimizations for creating HDF5 files for the ATL03 product:</p>
 <ol type="1">
+<li>Create HDF5 files using paged aggregation by setting HDF5 library parameters:
+<ol type="a">
 <li>File page strategy: H5F_FSPACE_STRATEGY_PAGE</li>
 <li>File page size: 8000000 If repacking an existing file, h5repack contains the code to alter these variables inside the file</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a> <span class="ex">h5repack</span> <span class="at">-S</span> PAGE <span class="at">-G</span> 8000000 input.h5 output.h5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol start="3" type="1">
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a> <span class="ex">h5repack</span> <span class="at">-S</span> PAGE <span class="at">-G</span> 8000000 input.h5 output.h5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 <li>Avoid using unlimited dimensions when creating variables because the HDF5 API cannot support it inside buffered pages and representation of these variables is not supported by Kerchunk.</li>
 </ol>
 <section id="reasoning" class="level4" data-number="4.1.1">
 <h4 data-number="4.1.1" class="anchored" data-anchor-id="reasoning"><span class="header-section-number">4.1.1</span> Reasoning</h4>
-<p>Based on the variable size of ATL03 it becomes really difficult to allocate a fixed metadata page, big files contain north of 30MB of metadata, but the median sized file is below 8MB. If we had adopted user block we would have caused an increase in the file size and storage cost of approximate 30% (reference to our tests). Another consequence of using a dedicated fixed page for file-level metadata is that metadata overflow will generate the same impact in access times, the library will fetch the metadata in one go but the rest will be using the predefined block size of 4kb.</p>
+<p>Based on the variable size of ATL03 it becomes really difficult to allocate a fixed metadata page. Big files contain north of 30MB of metadata, but the median metadata size per file is below 8MB. If we had adopted user block we would have caused an increase in the file size and storage cost of approximate 30% (reference to our tests). Another consequence of using a dedicated fixed page for file-level metadata is that metadata overflow will generate the same impact in access times, the library will fetch the metadata in one go but the rest will be using the predefined block size of 4kb.</p>
 <p>Paged aggregation is thus the simplest way of cloud optimizing an HDF5 file as the metadata will keep filling dedicated pages until all the file-level metadata is stored at the front of the file. Chunk sizes cannot be larger than the page size and when chunk sizes are smaller we need to take into account how these chunks will fit on a page, in an ideal scenario all the space will be filled but that is not the case and we will end up with unused space <a href="#fig-2" class="quarto-xref">See&nbsp;2</a>.</p>
 </section>
 </section>
@@ -453,7 +454,7 @@ Figure&nbsp;5: shows that performance once the I/O configuration is aligned with
 <p>As we saw in our benchmarks, efficient access to cloud optimized HDF5 files in cloud storage requires that we also optimize our access patterns. The following recommendations focus on optimizing workflows for Python users. However, these recommendations should be applicable across programming languages. It’s also worth mentioning that the HDF Group aims to include some of these features in their roadmap.</p>
 <ul>
 <li><strong>Efficient Reads</strong>: Efficiently reading cloud-hosted HDF5 files involves minimizing network requests and prioritizing large sequential reads. Configure chunk sizes between 1–10 MB to match the block sizes used in cloud object storage systems, ensuring meaningful data retrieval in each read. Avoid small chunks, as they cause excessive HTTP overhead and slower access speeds.</li>
-<li><strong>Parallel Access</strong>: Use parallel computing frameworks like <code>Dask</code> or multiprocessing to divide read operations across multiple processes or nodes. This alleviates the sequential access bottleneck caused by the HDF5 global lock, particularly in workflows accessing multiple datasets.</li>
+<li><strong>Parallel Access</strong>: Use parallel computing frameworks like <a href="https://www.dask.org/"><code>Dask</code></a> or multiprocessing to divide read operations across multiple processes or nodes. This alleviates the sequential access bottleneck caused by the HDF5 global lock, particularly in workflows accessing multiple datasets.</li>
 <li><strong>Cache Management</strong>: Implement caching for metadata to avoid repetitive fetches. Tools like <code>fsspec</code> or <code>h5coro</code> allow in-memory or on-disk caching for frequently accessed data, reducing latency during high-frequency</li>
 <li><strong>Regional Access</strong>: Operate workflows in the same cloud region as the data to minimize costs and latency. Cross-region data transfer is expensive and introduces significant delays. Where possible, deploy virtual machines close to the data storage region.</li>
 </ul>
@@ -474,9 +475,9 @@ Figure&nbsp;5: shows that performance once the I/O configuration is aligned with
 <ol type="1">
 <li>Set the “file space strategy” to H5F_FSPACE_STRATEGY_PAGE and enabled “free space tracking” within the HDF5 file creation property list.</li>
 <li>Set the “file space page size” to 8MiB.</li>
-<li>Changed all “COMPACT” dataset storage types to “CONTIGUOUS”.</li>
-<li>Increased the “chunk size” of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no “chunk sizes” exceeded the 8MiB “file space page size”.</li>
-<li>Introduced a new production step that executes the “h5repack” utility (with no options) to create a “defragmented” final product.</li>
+<li>Change all “COMPACT” dataset storage types to “CONTIGUOUS”.</li>
+<li>Increase the “chunk size” of the photon-rate datasets (from 10,000 to 100,000 elements), while making sure no “chunk sizes” exceed the 8MiB “file space page size”.</li>
+<li>Introduce a new production step that executes the “h5repack” utility (with no options) to create a “defragmented” final product.</li>
 </ol>
 </section>
 <section id="discussion-and-further-work" class="level3" data-number="4.5">
@@ -531,7 +532,7 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
     Jelenak, Aleksandar and Kaser, Lisa and E. Lee, Jeffrey},
   title = {Evaluating {Cloud-Optimized} {HDF5} for {NASA’s} {ICESat-2}
     {Mission}},
-  date = {2024-12-10},
+  date = {2024-12-19},
   langid = {en},
   abstract = {The Hierarchical Data Format (HDF) is a common archival
     format for n-dimensional scientific data; it has been utilized to
@@ -553,7 +554,7 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-a._lopez2024" class="csl-entry quarto-appendix-citeas" role="listitem">
 A. Lopez, L., P. Barrett, A., Steiker, A., Jelenak, A., Kaser, L., &amp;
-E. Lee, J. (2024, December 10). Evaluating Cloud-Optimized HDF5 for
+E. Lee, J. (2024, December 19). Evaluating Cloud-Optimized HDF5 for
 NASA’s ICESat-2 Mission.
 </div></div></section></div></main>
 <!-- /main column -->
