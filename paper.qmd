@@ -88,7 +88,7 @@ date: last-modified
 
 ## The Problem
 
-Scientific data from NASA and other agencies are increasingly being archived in and distributed from the commercial cloud. Cloud storage enables large-scale workflows and should reduce local storage costs. It also allows the use of scalable on-demand cloud computing resources by individual scientists and the broader scientific community. However, the majority of this scientific data is stored in a format that was not designed for the cloud: The Hierarchical Data format or HDF.
+Scientific data from NASA and other agencies are increasingly being archived in and distributed from the commercial cloud. Cloud storage enables large-scale workflows and should reduce local storage costs. It also allows the use of scalable on-demand cloud computing resources. However, the majority of this scientific data is stored in a format that was not designed for the cloud: The Hierarchical Data format or HDF.
 
 The most recent version of the Hierarchical Data Format is HDF5, a common archival format for n-dimensional scientific data; it has been utilized to store valuable information from astrophysics to earth sciences and everything in between. As flexible and powerful as HDF5 can be, it comes with big trade-offs when it’s accessed from remote storage systems. 
 
