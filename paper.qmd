@@ -92,7 +92,7 @@ Scientific data from NASA and other agencies are increasingly being archived in 
 
 The most recent version of the Hierarchical Data Format is HDF5, a common archival format for n-dimensional scientific data. HDF5 is used to store data from astrophysics to earth sciences and everything in between. However, as flexible and powerful as HDF5 can be, it comes with big trade-offs when it’s accessed from remote storage systems. 
 
-HDF5 is a complex file format; we can think of it as a file system using a tree-like structure with multiple data types and native data structures. Because of this complexity, the most reliable way of accessing data stored in this format is using the HDF5 C API. Regardless of access pattern, nearly all tools ultimately rely on the HDF5-C library and this brings a couple issues that affect the efficiency of accessing this format over the network:
+HDF5 is a complex file format; we can think of it as a file system using a tree-like structure with multiple data types and native data structures. Because of this complexity, the most reliable way of accessing data stored in this format is using the HDF5 C API^[Application Programming Interface]. Regardless of access pattern, nearly all tools ultimately rely on the HDF5-C library and this brings a couple issues that affect the efficiency of accessing this format over the network: metadata fragmentation and global API lock.
 
 ---
 
