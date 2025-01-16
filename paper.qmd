@@ -112,7 +112,7 @@ Because of the historical complexity of operations with the HDF5 format[@The_HDF
 
 ![](figures/figure-1.png)
 
-shows how reads (Rn) are done in order to access file metadata, In the first read, R0, the HDF5 library verifies the file signature from the superblock,  subsequent reads, R1, R2,...Rn, read file metadata, 4kb at the time.
+A cartoon showing the distribution of fragmented file-level metadata and data in an HDF5 file.  In the first read, R0, the HDF5 library verifies the file signature from the superblock.  Subsequent reads, R1, R2,...Rn, read file-level metadata, 4kb at the time.  The information in these metadata reads allow the actual data stored in the file to be accessed. 
 
 :::
 
