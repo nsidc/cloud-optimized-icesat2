@@ -90,7 +90,7 @@ date: last-modified
 
 Scientific data from NASA and other agencies are increasingly being archived in and distributed from the commercial cloud. Cloud storage enables large-scale workflows and should reduce local storage costs. It also allows the use of scalable on-demand cloud computing resources. However, the majority of this scientific data is stored in a format that was not designed for the cloud: The Hierarchical Data format or HDF.
 
-The most recent version of the Hierarchical Data Format is HDF5, a common archival format for n-dimensional scientific data; it has been utilized to store valuable information from astrophysics to earth sciences and everything in between. As flexible and powerful as HDF5 can be, it comes with big trade-offs when it’s accessed from remote storage systems. 
+The most recent version of the Hierarchical Data Format is HDF5, a common archival format for n-dimensional scientific data. HDF5 is used to store data from astrophysics to earth sciences and everything in between. However, as flexible and powerful as HDF5 can be, it comes with big trade-offs when it’s accessed from remote storage systems. 
 
 HDF5 is a complex file format; we can think of it as a file system using a tree-like structure with multiple data types and native data structures. Because of this complexity, the most reliable way of accessing data stored in this format is using the HDF5 C API. Regardless of access pattern, nearly all tools ultimately rely on the HDF5-C library and this brings a couple issues that affect the efficiency of accessing this format over the network:
 
