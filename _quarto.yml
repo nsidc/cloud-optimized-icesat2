@@ -9,5 +9,6 @@ manuscript:
 format:
   agu-html:
     keep-tex: false
+    number-depth: 1
   agu-pdf:
     keep-tex: true    
