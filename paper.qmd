@@ -104,7 +104,7 @@ Fragmentation occurs when this metadata is spread out across multiple non-contig
 
 #### **Global API Lock**
 
-Because of the historical complexity of operations with the HDF5 format[@The_HDF_Group_Hierarchical_Data_Format], there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read is sequential and latency in the cloud is exponentially bigger than local access [@Mozilla-latency-2024] [@scott-2020].
+Because of the historical complexity of operations with the HDF5 format[@The_HDF_Group_Hierarchical_Data_Format], there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read has to be sequential and latency in the cloud is exponentially bigger than local access [@Mozilla-latency-2024] [@scott-2020].
 
 ---
 
