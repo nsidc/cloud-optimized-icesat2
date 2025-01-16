@@ -96,15 +96,15 @@ HDF5 is a complex file format; we can think of it as a file system using a tree-
 
 ---
 
-#### **Metadata fragmentation**
+##### _Metadata fragmentation_
 
 When working with large datasets, especially those that include numerous variables and nested groups, the storage of file-level metadata can become a challenge. In HDF5, by default, metadata associated with each dataset is stored in chunks of 4 kilobytes (KB). This chunking mechanism was originally intended to optimize storage efficiency and access speed on disks with hardware resources available when HDF was originally designed in the 1990s. In datasets with many variables and/or complex hierarchical structures, these 4KB chunks can lead to significant fragmentation.
 
-Fragmentation occurs when this metadata is spread out across multiple non-contiguous chunks within the file. This makes accessing or modifying data inefficient because the HDF library has to read from multiple, scattered locations in the file. Over time, as the dataset grows and evolves, this fragmentation can compound, leading to degraded performance and increased storage overhead. In particular, operations that involve reading or writing metadata, such as opening a file, checking attributes, or modifying variables, can become slower and more resource-intensive.  When cloud-hosted files are accessed over a network using HTTPS, multiple reads increases the time to access data.
+Fragmentation occurs when this metadata is spread out across multiple non-contiguous chunks within the file. This makes accessing or modifying data inefficient because the HDF library has to read from multiple, scattered locations in the file (@fig-1). Over time, as the dataset grows and evolves, this fragmentation can compound, leading to degraded performance and increased storage overhead. In particular, operations that involve reading or writing metadata, such as opening a file, checking attributes, or modifying variables, can become slower and more resource-intensive.  When cloud-hosted files are accessed over a network using HTTPS, multiple reads increases the time to access data.
 
-#### **Global API Lock**
+##### _Global API Lock_
 
-Because of the historical complexity of operations with the HDF5 format[@The_HDF_Group_Hierarchical_Data_Format], there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read has to be sequential and latency in the cloud is exponentially bigger than local access [@Mozilla-latency-2024] [@scott-2020].
+Because of the historical complexity of operations with the HDF5 format [@The_HDF_Group_Hierarchical_Data_Format], there has been a necessity to make the library thread-safe and similarly to what happens in the Python language, the simplest mechanism to implement this is to have a global API lock. This global lock is not as big of an issue when we read data from local disk but it becomes a major bottleneck when we read data over the network because each read has to be sequential and latency in the cloud is exponentially bigger than local access [@Mozilla-latency-2024] [@scott-2020].
 
 ---
 
