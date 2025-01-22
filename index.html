@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,7 +12,7 @@
 <meta name="author" content="Aleksandar Jelenak">
 <meta name="author" content="Lisa Kaser">
 <meta name="author" content="Jeffrey E. Lee">
-<meta name="dcterms.date" content="2024-12-19">
+<meta name="dcterms.date" content="2025-01-22">
 <meta name="keywords" content="cloud-native, cloud, HDF5, NASA, ICESat-2">
 
 <title>Evaluating Cloud-Optimized HDF5 for NASA’s ICESat-2 Mission</title>
@@ -91,10 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e1e378e796bdd1aa61cf7dc9c87af473.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7bfb9ce031f0150bcdd0059ffcd3ab40.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -111,10 +111,10 @@ We present an implementation of recently available features in the HDF5 stack th
 <meta name="citation_author" content="Aleksandar Jelenak">
 <meta name="citation_author" content="Lisa Kaser">
 <meta name="citation_author" content="Jeffrey E. Lee">
-<meta name="citation_publication_date" content="2024-12-19">
-<meta name="citation_cover_date" content="2024-12-19">
-<meta name="citation_year" content="2024">
-<meta name="citation_online_date" content="2024-12-19">
+<meta name="citation_publication_date" content="2025-01-22">
+<meta name="citation_cover_date" content="2025-01-22">
+<meta name="citation_year" content="2025">
+<meta name="citation_online_date" content="2025-01-22">
 <meta name="citation_language" content="en">
 <meta name="citation_journal_title" content="Geophysical Research Letters">
 <meta name="citation_reference" content="citation_title=The ice, cloud, and land elevation satellite – 2 mission: A global geolocated photon product derived from the advanced topographic laser altimeter system;,citation_abstract=The Ice, Cloud, and land Elevation Satellite – 2 (ICESat-2) observatory was launched on 15 September 2018 to measure ice sheet and glacier elevation change, sea ice freeboard, and enable the determination of the heights of Earth’s forests. ICESat-2’s laser altimeter, the Advanced Topographic Laser Altimeter System (ATLAS) uses green (532 nm) laser light and single-photon sensitive detection to measure time of flight and subsequently surface height along each of its six beams. In this paper, we describe the major components of ATLAS, including the transmitter, the receiver and the components of the timing system. We present the major components of the ICESat-2 observatory, including the Global Positioning System, star trackers and inertial measurement unit. The ICESat-2 Level 1B data product (ATL02) provides the precise photon round-trip time of flight, among other data. The ICESat-2 Level 2A data product (ATL03) combines the photon times of flight with the observatory position and attitude to determine the geodetic location (i.e. the latitude, longitude and height) of the ground bounce point of photons detected by ATLAS. The ATL03 data product is used by higher-level (Level 3A) surface-specific data products to determine glacier and ice sheet height, sea ice freeboard, vegetation canopy height, ocean surface topography, and inland water body height.;,citation_author=Thomas A. Neumann;,citation_author=Anthony J. Martino;,citation_author=Thorsten Markus;,citation_author=Sungkoo Bae;,citation_author=Megan R. Bock;,citation_author=Anita C. Brenner;,citation_author=Kelly M. Brunt;,citation_author=John Cavanaugh;,citation_author=Stanley T. Fernandes;,citation_author=David W. Hancock;,citation_author=Kaitlin Harbeck;,citation_author=Jeffrey Lee;,citation_author=Nathan T. Kurtz;,citation_author=Philip J. Luers;,citation_author=Scott B. Luthcke;,citation_author=Lori Magruder;,citation_author=Teresa A. Pennington;,citation_author=Luis Ramos-Izquierdo;,citation_author=Timothy Rebold;,citation_author=Jonah Skoog;,citation_author=Taylor C. Thomas;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S003442571930344X;,citation_doi=https://doi.org/10.1016/j.rse.2019.111325;,citation_issn=0034-4257;,citation_volume=233;,citation_journal_title=Remote Sensing of Environment;">
@@ -202,7 +202,7 @@ We present an implementation of recently available features in the HDF5 stack th
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">December 19, 2024</p>
+              <p class="date">January 22, 2025</p>
             </div>
           </div>
           
@@ -527,12 +527,12 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
 <li id="fn1"><p><code>h5py</code> is a dependency of Xarray<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>The HDF5 superblock is a crucial component of the HDF5 file format, acting as the starting point for accessing all data within the file. It stores important metadata such as the version of the file format, pointers to the root group, and addresses for locating different file components<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{a._lopez2024,
+</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{a._lopez2025,
   author = {A. Lopez, Luis and P. Barrett, Andrew and Steiker, Amy and
     Jelenak, Aleksandar and Kaser, Lisa and E. Lee, Jeffrey},
   title = {Evaluating {Cloud-Optimized} {HDF5} for {NASA’s} {ICESat-2}
     {Mission}},
-  date = {2024-12-19},
+  date = {2025-01-22},
   langid = {en},
   abstract = {The Hierarchical Data Format (HDF) is a common archival
     format for n-dimensional scientific data; it has been utilized to
@@ -552,9 +552,9 @@ The HDF Group. (n.d.). <span class="nocase">Hierarchical Data Format, version 5<
     potential cost-savings for data producers if their data are
     processed using cloud-optimized strategies.}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-a._lopez2024" class="csl-entry quarto-appendix-citeas" role="listitem">
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-a._lopez2025" class="csl-entry quarto-appendix-citeas" role="listitem">
 A. Lopez, L., P. Barrett, A., Steiker, A., Jelenak, A., Kaser, L., &amp;
-E. Lee, J. (2024, December 19). Evaluating Cloud-Optimized HDF5 for
+E. Lee, J. (2025, January 22). Evaluating Cloud-Optimized HDF5 for
 NASA’s ICESat-2 Mission.
 </div></div></section></div></main>
 <!-- /main column -->
