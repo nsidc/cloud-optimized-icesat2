@@ -3,13 +3,16 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11
-  - jupyterlab>4
+  - jupyterlab>3,<=4.2
   - fsspec>=2024.05
   - s3fs
   - numpy<2.0
   - matplotlib-base
   - pandas
   - xarray
+  - hvplot
+  - ipyleaflet
+  - geoviews
   - dask
   - distributed
   - dask-labextension
